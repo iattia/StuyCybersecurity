@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTF Challenge Gauntlet</title>
+    <!-- Using Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Using Google Fonts for a nice, clean font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* A simple style to use the Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white antialiased">
+
+    <div class="container mx-auto px-4 py-8 sm:py-12 max-w-4xl">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl sm:text-5xl font-bold text-cyan-400">CTF Challenge Gauntlet</h1>
+            <p class="text-gray-400 mt-2">Test your new skills with these introductory challenges!</p>
+        </header>
+
+        <main class="space-y-10">
+
+            <!-- Challenge 1: Web - Hidden in Plain Sight -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+                <h2 class="text-2xl font-semibold text-green-400 mb-2">Challenge 1: Web - Hidden in Plain Sight</h2>
+                <p class="text-gray-300">Developers often leave notes for each other in the code. Find the flag hidden as a comment in this page's HTML source.</p>
+                <button id="hintBtn1" class="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition duration-200">Show Hint</button>
+                <div id="hint1" style="display:none;" class="mt-4 text-gray-400 italic">Hint: How can you look at the "source" of a webpage? (Try right-clicking).</div>
+                <!-- The flag is hidden right here for all you curious explorers! flag{w3b_n1nja_!n_tr41n1ng} -->
+                <div class="mt-4 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flagInput1" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <button onclick="checkFlag(1)" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result1" class="mt-2 font-bold h-6"></p>
+            </section>
+
+            <!-- Challenge 2: Crypto - A Classic Encoding -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
+                <h2 class="text-2xl font-semibold text-yellow-400 mb-2">Challenge 2: Crypto - A Classic Encoding</h2>
+                <p class="text-gray-300">This flag is encoded in Base64, a very common format for representing data. Decode it to find the real flag.</p>
+                <div class="mt-4 bg-gray-900 p-4 rounded-md"><p class="text-lg font-mono break-all text-gray-200">ZmxhZ3tCYXNlNjRfaXNfZnVuIX0=</p></div>
+                <button id="hintBtn2" class="mt-4 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition duration-200">Show Hint</button>
+                <div id="hint2" style="display:none;" class="mt-4 text-gray-400 italic">Hint: Try using a tool like CyberChef. The name of this encoding has a number in it... a number that's a power of 2.</div>
+                <div class="mt-4 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flagInput2" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                    <button onclick="checkFlag(2)" class="w-full sm:w-auto bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result2" class="mt-2 font-bold h-6"></p>
+            </section>
+
+            <!-- Challenge 3: Forensics - Data Detective -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-purple-500">
+                <h2 class="text-2xl font-semibold text-purple-400 mb-2">Challenge 3: Forensics - Data Detective</h2>
+                <p class="text-gray-300">Digital photos contain hidden "metadata". Download this image and use an online tool to analyze its metadata to find the flag.</p>
+                <div class="my-6 text-center"><a href="https://raw.githubusercontent.com/mkmety/Medium-Steg-Image/refs/heads/master/ocean.jpg" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/mkmety/Medium-Steg-Image/refs/heads/master/ocean.jpg" alt="A photo of an ocean for analysis" class="mx-auto rounded-lg shadow-md max-w-sm w-full"></a></div>
+                <button id="hintBtn3" class="mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition duration-200">Show Hint</button>
+                <div id="hint3" style="display:none;" class="mt-4 text-gray-400 italic">Hint: Search for an "online EXIF viewer". The flag is in the 'Copyright Notice' field.</div>
+                 <div class="mt-4 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flagInput3" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <button onclick="checkFlag(3)" class="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result3" class="mt-2 font-bold h-6"></p>
+            </section>
+            
+            <!-- Challenge 4: Web - Don't Be a Robot -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+                <h2 class="text-2xl font-semibold text-green-400 mb-2">Challenge 4: Web - Don't Be a Robot</h2>
+                <p class="text-gray-300">Websites use a `robots.txt` file to tell search engines which pages to ignore. Find the flag in this simulated `robots.txt` file content.</p>
+                <div class="mt-4 bg-gray-900 p-4 rounded-md font-mono text-gray-300"><p>User-agent: *</p><p>Disallow: /logs/</p><p>Disallow: /tmp/</p><p>Disallow: /super_secret_admin_page_flag{r0b0ts_4r3_fr13nds}.html</p></div>
+                <button id="hintBtn4" class="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition duration-200">Show Hint</button>
+                <div id="hint4" style="display:none;" class="mt-4 text-gray-400 italic">Hint: The 'Disallow' directive tells robots what to avoid. One of these paths looks much more interesting than the others.</div>
+                <div class="mt-4 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flagInput4" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <button onclick="checkFlag(4)" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result4" class="mt-2 font-bold h-6"></p>
+            </section>
+
+            <!-- Challenge 5: Crypto - A Trip to Ancient Rome -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
+                <h2 class="text-2xl font-semibold text-yellow-400 mb-2">Challenge 5: Crypto - A Trip to Ancient Rome</h2>
+                <p class="text-gray-300">This message was encrypted with a simple Caesar cipher where every letter is shifted. Decode it.</p>
+                <div class="mt-4 bg-gray-900 p-4 rounded-md"><p class="text-lg font-mono break-all text-gray-200">synt{ebg13_vf_punc_pbyyl!}</p></div>
+                <button id="hintBtn5" class="mt-4 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition duration-200">Show Hint</button>
+                <div id="hint5" style="display:none;" class="mt-4 text-gray-400 italic">Hint: A shift of 13 letters (ROT13) is very common. CyberChef has a recipe for it!</div>
+                <div class="mt-4 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flagInput5" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                    <button onclick="checkFlag(5)" class="w-full sm:w-auto bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result5" class="mt-2 font-bold h-6"></p>
+            </section>
+
+            <!-- Challenge 6: Web - Bypassing the Client -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-red-500">
+                <h2 class="text-2xl font-semibold text-red-400 mb-2">Challenge 6: Web - Bypassing the Client</h2>
+                <p class="text-gray-300">This button is disabled using HTML. Use your browser's developer tools to enable it and get the flag.</p>
+                <div class="mt-6 text-center">
+                    <button id="flagBtn6" disabled class="bg-gray-600 text-gray-400 font-bold py-2 px-4 rounded-lg cursor-not-allowed">Get Flag (Disabled)</button>
+                    <p id="flagText6" class="mt-4 text-red-300 font-mono hidden"></p>
+                </div>
+                <button id="hintBtn6" class="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition duration-200">Show Hint</button>
+                <div id="hint6" style="display:none;" class="mt-4 text-gray-400 italic">Hint: Right-click the button and "Inspect". Find the `disabled` property in the HTML and delete it. Or, use the Console to run `document.getElementById('flagBtn6').disabled = false;`</div>
+                <div class="mt-4 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flagInput6" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <button onclick="checkFlag(6)" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result6" class="mt-2 font-bold h-6"></p>
+            </section>
+            
+            <!-- Challenge 7: Steganography - A Conceptual Challenge -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-blue-500">
+                <h2 class="text-2xl font-semibold text-blue-400 mb-2">Challenge 7: Stego - A Conceptual Challenge</h2>
+                <p class="text-gray-300">Steganography is hiding data inside an image. In a real challenge, you'd download the image and use an online decoder tool (like a "LSB decoder") to find a hidden message. Since this is a simulation, the flag is provided here for you to understand the concept.</p>
+                <div class="my-6 text-center"><img src="https://placehold.co/600x400/2D3748/E2E8F0?text=Concept+Image" alt="flag{1nv1s1bl3_1nk_m4st3r}" class="mx-auto rounded-lg shadow-md max-w-sm w-full"></div>
+                <button id="hintBtn7" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200">Show Hint</button>
+                <div id="hint7" style="display:none;" class="mt-4 text-gray-400 italic">Hint: The purpose of this challenge is to teach you what steganography is. No tools are needed this time! Just use the flag from the description.</div>
+                <div class="mt-4 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flagInput7" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="checkFlag(7)" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result7" class="mt-2 font-bold h-6"></p>
+            </section>
+
+            <!-- Challenge 8: Web - What's Cooking? -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+                <h2 class="text-2xl font-semibold text-green-400 mb-2">Challenge 8: Web - What's Cooking?</h2>
+                <p class="text-gray-300">Websites use cookies to store info in your browser. This page has set a cookie. Find its value in your browser's dev tools!</p>
+                <div id="cookie-status" class="mt-4 bg-gray-900 p-3 rounded-md text-center">
+                    <p class="text-gray-400">Cookie status: <span id="cookie-check" class="font-bold text-yellow-400">Checking...</span></p>
+                </div>
+                <button id="hintBtn8" class="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition duration-200">Show Hint</button>
+                <div id="hint8" style="display:none;" class="mt-4 text-gray-400 italic">Hint: Use dev tools (F12) -> "Application" (Chrome) or "Storage" (Firefox). Note: If you're opening this as a local file (`file://...`), your browser might block cookies.</div>
+                 <div class="mt-4 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flagInput8" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <button onclick="checkFlag(8)" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result8" class="mt-2 font-bold h-6"></p>
+            </section>
+
+            <!-- Challenge 9: Forensics - Finding the Needle -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-purple-500">
+                <h2 class="text-2xl font-semibold text-purple-400 mb-2">Challenge 9: Forensics - Finding the Needle</h2>
+                <p class="text-gray-300">This block of text simulates the contents of a binary file. Somewhere inside all this gibberish is a readable flag. Find it!</p>
+                <div class="mt-4 bg-gray-900 p-4 rounded-md h-32 overflow-y-scroll font-mono text-sm text-gray-500">
+                    <p>ELF...>...@@.........$..$............@.......PNG...IHDR...sRGB...gAMA...pHYs...@...tEXtSoftware...Adobe...cHRM...z26...b...w...r...g...b...IDATx^......ޭ...]..o...l.M~........flag{h4yst4ck_n33dl3_f0und}......i...v....b`........IENDB`</p>
+                </div>
+                <button id="hintBtn9" class="mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition duration-200">Show Hint</button>
+                <div id="hint9" style="display:none;" class="mt-4 text-gray-400 italic">Hint: You don't need a special tool for this one, just sharp eyes! Carefully read through the text. The flag is the only part that looks like normal text.</div>
+                <div class="mt-4 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flagInput9" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <button onclick="checkFlag(9)" class="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result9" class="mt-2 font-bold h-6"></p>
+            </section>
+
+            <!-- Challenge 10: Crypto - Double Trouble -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
+                <h2 class="text-2xl font-semibold text-yellow-400 mb-2">Challenge 10: Crypto - Double Trouble</h2>
+                <p class="text-gray-300">This flag has been put through two layers of encoding/encryption. You'll need to figure out the layers and reverse them.</p>
+                <div class="mt-4 bg-gray-900 p-4 rounded-md"><p class="text-lg font-mono break-all text-gray-200">Wm14aFozdGtNSFZpYkROZllqUnpNelkwWDJZd2NsOTBhRE5mZHpGdWZRbz0=</p></div>
+                <button id="hintBtn10" class="mt-4 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition duration-200">Show Hint</button>
+                <div id="hint10" style="display:none;" class="mt-4 text-gray-400 italic">Hint: This looks like Base64. Try decoding it. What does the result look like? Maybe you need to decode it from Base64 more than once.</div>
+                <div class="mt-4 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flagInput10" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                    <button onclick="checkFlag(10)" class="w-full sm:w-auto bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result10" class="mt-2 font-bold h-6"></p>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // Set a cookie for Challenge 8 when the page loads
+        document.cookie = "secret_ingredient=c00k13_m0nst3r_!s_h3r3; SameSite=Lax; Secure";
+
+        const correctFlags = {
+            1: 'flag{w3b_n1nja_!n_tr41n1ng}',
+            2: 'flag{Base64_is_fun!}',
+            3: 'THIS IS THE HIDDEN FLAG',
+            4: 'flag{r0b0ts_4r3_fr13nds}',
+            5: 'flag{rot13_is_chap_colly!}',
+            6: 'flag{cl13nt_s1d3_ch3cks_4r3_w34k}',
+            7: 'flag{1nv1s1bl3_1nk_m4st3r}',
+            8: 'flag{c00k13_m0nst3r_!s_h3r3}',
+            9: 'flag{h4yst4ck_n33dl3_f0und}',
+            10: 'flag{d0ubl3_b4s364_f0r_th3_w1n}'
+        };
+
+        function checkFlag(num) {
+            const userInput = document.getElementById('flagInput' + num).value;
+            const resultPara = document.getElementById('result' + num);
+            
+            if (userInput.trim() === correctFlags[num]) {
+                resultPara.textContent = 'Correct!';
+                resultPara.className = 'mt-2 font-bold h-6 text-green-400';
+            } else {
+                resultPara.textContent = 'Incorrect, try again!';
+                resultPara.className = 'mt-2 font-bold h-6 text-red-400';
+            }
+        }
+
+        // Setup hint buttons
+        for (let i = 1; i <= 10; i++) {
+            const btn = document.getElementById('hintBtn' + i);
+            const hint = document.getElementById('hint' + i);
+            if (btn && hint) {
+                btn.onclick = function() {
+                    hint.style.display = 'block';
+                };
+            }
+        }
+
+        // Logic for Challenge 6 button
+        const flagBtn6 = document.getElementById('flagBtn6');
+        if (flagBtn6) {
+            flagBtn6.addEventListener('click', function() {
+                const flagPara = document.getElementById('flagText6');
+                flagPara.textContent = 'Here is your flag: flag{cl13nt_s1d3_ch3cks_4r3_w34k}';
+                flagPara.classList.remove('hidden');
+            });
+        }
+        
+        // Logic for Challenge 8 cookie check
+        window.onload = function() {
+            const cookieCheckSpan = document.getElementById('cookie-check');
+            if (document.cookie.includes('secret_ingredient')) {
+                cookieCheckSpan.textContent = 'Set successfully!';
+                cookieCheckSpan.classList.remove('text-yellow-400');
+                cookieCheckSpan.classList.add('text-green-400');
+            } else {
+                cookieCheckSpan.textContent = 'Not found (is your browser blocking it?)';
+                cookieCheckSpan.classList.remove('text-yellow-400');
+                cookieCheckSpan.classList.add('text-red-400');
+            }
+        };
+    </script>
+
+</body>
+</html>
