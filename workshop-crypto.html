@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Cryptography Workshop - CTF Training</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .spooky-header {
+            font-family: 'Creepster', cursive;
+            letter-spacing: 2px;
+        }
+        .code-block {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white antialiased">
+
+    <div class="container mx-auto px-4 py-8 sm:py-12 max-w-5xl">
+        <header class="text-center mb-12">
+            <h1 class="spooky-header text-5xl sm:text-6xl font-bold text-orange-500">Cryptography Workshop</h1>
+            <p class="text-gray-400 mt-2">Multi-layered Encoding Challenge - 30 Minutes</p>
+            <div class="mt-4">
+                <a href="CTFReview.html" class="text-cyan-400 hover:text-cyan-300 underline">← Back to Main Menu</a>
+            </div>
+        </header>
+
+        <main class="space-y-10">
+            <!-- Introduction Section -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-orange-500">
+                <h2 class="text-3xl font-semibold text-orange-400 mb-4">🔐 Mission Briefing</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-3">Your Mission</h3>
+                        <p class="text-gray-300 mb-4">A secret agent has left you an encrypted message containing crucial intelligence. The message has been encoded using multiple layers of encryption to avoid detection. Your job is to peel back each layer until you reveal the final flag.</p>
+                        
+                        <h3 class="text-xl font-semibold text-white mb-3">Skills You'll Practice</h3>
+                        <ul class="list-disc list-inside text-gray-300 space-y-1">
+                            <li>Pattern recognition in encoded data</li>
+                            <li>Using CyberChef for multi-step decoding</li>
+                            <li>Understanding common encoding schemes</li>
+                            <li>XOR encryption and decryption</li>
+                            <li>Frequency analysis basics</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-3">Common Encoding Types</h3>
+                        <div class="bg-gray-900 p-4 rounded-lg text-sm">
+                            <p class="text-cyan-400 font-semibold">Base64:</p>
+                            <p class="text-gray-300 mb-2">Uses A-Z, a-z, 0-9, +, / and = padding</p>
+                            
+                            <p class="text-cyan-400 font-semibold">ROT13/Caesar:</p>
+                            <p class="text-gray-300 mb-2">Shifted alphabet (A→N, B→O, etc.)</p>
+                            
+                            <p class="text-cyan-400 font-semibold">Hexadecimal:</p>
+                            <p class="text-gray-300 mb-2">Uses 0-9 and A-F characters only</p>
+                            
+                            <p class="text-cyan-400 font-semibold">XOR:</p>
+                            <p class="text-gray-300">Binary operation with a key</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Challenge 1: Warm-up -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-blue-500">
+                <h2 class="text-2xl font-semibold text-blue-400 mb-4">Challenge 1: The Double Agent 🕵️</h2>
+                <p class="text-gray-300 mb-4">This message was encoded twice using the same method. The agent was in a hurry and used the simplest encoding available.</p>
+                
+                <div class="bg-gray-900 p-4 rounded-lg mb-4">
+                    <p class="text-lg font-mono text-yellow-300">VjJ4a1NtVlhTa2xUYld4VFlsZG9XRmx0Y0V0a1ZscHpVMnBhYWxKdGVIcFpWVkpPVFZaYWNWTnNjRmRXUjJoMldWZHdTMlZzVG5OalJXdDZVakJrZUZreWVHRmtNVnAwVW14YVRtSnJWblZaYTFwYVpWWmtWVkY2UVhsaFZrWldWakkwTldSR1VuVlRiV3hxVW10T01Wa3llSE5UUjBwSFkwVlNXbUZyTVc1bFZ6RTFUVVpKZDFkVWJGWm5iR3Q1VlRGU1YyTXhUblZUV0dScFlUQkZNMWRXVmtOaFZUbEZVVzEwVDJGck1IZGxWekYzWWtVMVNHRkhkRTlsV0doNVYxY3dRMDF0U2xoUFNGSkVUVWRvZWs1R2EzZFRVVDA5</p>
+                </div>
+                
+                <div class="mb-4">
+                    <button id="hint1Btn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200">Show Hint</button>
+                    <div id="hint1" style="display:none;" class="mt-4 text-gray-400 italic">
+                        Hint: This looks like Base64 (notice the padding =). But after decoding once, you might get... more Base64! Try decoding twice.
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flag1" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="checkFlag(1)" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result1" class="mt-2 font-bold h-6"></p>
+            </section>
+
+            <!-- Challenge 2: ROT13 + Base64 -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-purple-500">
+                <h2 class="text-2xl font-semibold text-purple-400 mb-4">Challenge 2: The Caesar's Digital Scroll 📜</h2>
+                <p class="text-gray-300 mb-4">The agent used an ancient cipher combined with modern encoding. First, decode from Base64, then apply the Caesar's favorite rotation.</p>
+                
+                <div class="bg-gray-900 p-4 rounded-lg mb-4">
+                    <p class="text-lg font-mono text-yellow-300">c3lhZHtubjFwZV9mdXJfcW4zaWF0X200eV9maDRldH0=</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-2">Step-by-Step Process:</h3>
+                        <ol class="list-decimal list-inside text-gray-300 space-y-1">
+                            <li>Identify the first encoding layer</li>
+                            <li>Decode using CyberChef or command line</li>
+                            <li>Analyze the result for patterns</li>
+                            <li>Apply the second decoding method</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-2">Tools to Use:</h3>
+                        <ul class="list-disc list-inside text-gray-300 space-y-1">
+                            <li><a href="https://gchq.github.io/CyberChef/" target="_blank" class="text-cyan-400 hover:text-cyan-300 underline">CyberChef</a></li>
+                            <li>Command line: <code class="bg-gray-700 px-2 py-1 rounded">base64 -d</code></li>
+                            <li>Online ROT13 decoder</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <button id="hint2Btn" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition duration-200">Show Hint</button>
+                    <div id="hint2" style="display:none;" class="mt-4 text-gray-400 italic">
+                        Hint: After Base64 decoding, you should see something that looks like: "flag{...}" but with letters shifted. Try ROT13 (each letter shifted by 13 positions).
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flag2" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <button onclick="checkFlag(2)" class="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result2" class="mt-2 font-bold h-6"></p>
+            </section>
+
+            <!-- Challenge 3: Triple Layer -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+                <h2 class="text-2xl font-semibold text-green-400 mb-4">Challenge 3: The Triple Locked Vault 🔒</h2>
+                <p class="text-gray-300 mb-4">This intelligence is protected by three layers of security. The agent's notes say: "Hex → Base64 → ROT13". Work backwards to unlock the vault!</p>
+                
+                <div class="bg-gray-900 p-4 rounded-lg mb-4">
+                    <p class="text-lg font-mono text-yellow-300">6358686b616e4e54616e5268616e4e55614770765a6d636764476830636d56664c6d566a626e466c626d4e6c58334a766447457a61573176626c3969595852666157467a582352795a5856746258413d</p>
+                </div>
+
+                <div class="bg-gray-700 p-4 rounded-lg mb-4">
+                    <h3 class="text-lg font-semibold text-white mb-2">🧠 Decoding Strategy</h3>
+                    <p class="text-gray-300 mb-2">When you see multiple encoding layers, work backwards from the hint:</p>
+                    <div class="bg-gray-800 p-3 rounded text-sm">
+                        <p class="text-cyan-400">Agent's Process: Plain Text → ROT13 → Base64 → Hex</p>
+                        <p class="text-orange-400">Your Process: Hex → Base64 → ROT13 → Plain Text</p>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <button id="hint3Btn" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition duration-200">Show Hint</button>
+                    <div id="hint3" style="display:none;" class="mt-4 text-gray-400 italic">
+                        Hint: The message is all hexadecimal digits (0-9, a-f). First, convert from hex to ASCII. Then you should see Base64. Finally, apply ROT13.
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flag3" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <button onclick="checkFlag(3)" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result3" class="mt-2 font-bold h-6"></p>
+            </section>
+
+            <!-- Challenge 4: XOR Introduction -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-red-500">
+                <h2 class="text-2xl font-semibold text-red-400 mb-4">Challenge 4: The XOR Enigma ⚡</h2>
+                <p class="text-gray-300 mb-4">The agent used XOR encryption with a single character key. The encrypted message is given in hexadecimal. Your job is to find the key and decrypt the message.</p>
+                
+                <div class="bg-gray-900 p-4 rounded-lg mb-4">
+                    <p class="text-lg font-mono text-yellow-300">1a021e070a1c0a1b1a0b040c0a1e13001c040c1a041c0c0a1e13001b1a1e1c001c0c1a02</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-2">XOR Basics:</h3>
+                        <ul class="list-disc list-inside text-gray-300 space-y-1">
+                            <li>XOR is reversible: A ⊕ B ⊕ B = A</li>
+                            <li>Single-character key means same character used throughout</li>
+                            <li>Try common keys: space (0x20), 'A' (0x41), etc.</li>
+                            <li>Look for readable English text</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-2">CyberChef Recipe:</h3>
+                        <ol class="list-decimal list-inside text-gray-300 space-y-1">
+                            <li>From Hex</li>
+                            <li>XOR with different single characters</li>
+                            <li>Look for "flag{" at the beginning</li>
+                            <li>Adjust key until readable</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <button id="hint4Btn" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition duration-200">Show Hint</button>
+                    <div id="hint4" style="display:none;" class="mt-4 text-gray-400 italic">
+                        Hint: Try XOR with the character 'j' (hex: 0x6A). In CyberChef: From Hex → XOR (key: 'j', format: UTF8) → look for readable text.
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flag4" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <button onclick="checkFlag(4)" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result4" class="mt-2 font-bold h-6"></p>
+            </section>
+
+            <!-- Challenge 5: Advanced Multi-layer -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
+                <h2 class="text-2xl font-semibold text-yellow-400 mb-4">Challenge 5: The Master Cipher 🏆</h2>
+                <p class="text-gray-300 mb-4">This is the final test! The agent layered multiple encodings without telling you the order. You must identify each layer and decode them in the correct sequence.</p>
+                
+                <div class="bg-gray-900 p-4 rounded-lg mb-4">
+                    <p class="text-lg font-mono text-yellow-300">NGIyYjI0NjQ2ZjZlNjU1ZjMzNzMzMzMzNmE2NTZlNzQ1Zg==</p>
+                </div>
+
+                <div class="bg-gray-700 p-4 rounded-lg mb-4">
+                    <h3 class="text-lg font-semibold text-white mb-2">🔍 Analysis Questions</h3>
+                    <div class="space-y-2 text-gray-300">
+                        <p><strong>1.</strong> What characters do you see? (A-Z, a-z, 0-9, special chars?)</p>
+                        <p><strong>2.</strong> Does it end with padding (=)?</p>
+                        <p><strong>3.</strong> After first decode, what pattern emerges?</p>
+                        <p><strong>4.</strong> Keep decoding until you get readable text!</p>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <button id="hint5Btn" class="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition duration-200">Show Hint</button>
+                    <div id="hint5" style="display:none;" class="mt-4 text-gray-400 italic">
+                        Hint: Starts with Base64 (note the =). Then hex. Then... maybe a simple substitution? Think about what "l33t speak" might look like.
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input type="text" id="flag5" placeholder="flag{...}" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                    <button onclick="checkFlag(5)" class="w-full sm:w-auto bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded transition duration-300">Check Flag</button>
+                </div>
+                <p id="result5" class="mt-2 font-bold h-6"></p>
+            </section>
+
+            <!-- Bonus Theory Section -->
+            <section class="bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-cyan-500">
+                <h2 class="text-2xl font-semibold text-cyan-400 mb-4">🎓 Cryptography Fundamentals</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-3">Encoding vs. Encryption</h3>
+                        <div class="text-gray-300 space-y-2 text-sm">
+                            <p><strong>Encoding</strong> (Base64, Hex): Transforms data format, not secret</p>
+                            <p><strong>Encryption</strong> (AES, RSA): Secures data with keys</p>
+                            <p><strong>Obfuscation</strong> (ROT13): Hides meaning, not secure</p>
+                        </div>
+                        
+                        <h3 class="text-lg font-semibold text-white mb-3 mt-4">Real-World Applications</h3>
+                        <div class="text-gray-300 space-y-1 text-sm">
+                            <p>• Web tokens (JWT) use Base64</p>
+                            <p>• URLs encode special characters</p>
+                            <p>• HTTPS uses multiple encryption layers</p>
+                            <p>• Malware often uses multiple obfuscation</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-3">Pro Tips for CTFs</h3>
+                        <div class="text-gray-300 space-y-2 text-sm">
+                            <p><strong>Pattern Recognition:</strong> Learn to spot Base64, hex, etc.</p>
+                            <p><strong>Automated Tools:</strong> Use scripts for common operations</p>
+                            <p><strong>Frequency Analysis:</strong> Common letters appear more often</p>
+                            <p><strong>Context Clues:</strong> Challenge names/descriptions give hints</p>
+                        </div>
+                        
+                        <h3 class="text-lg font-semibold text-white mb-3 mt-4">Next Steps</h3>
+                        <div class="text-gray-300 space-y-1 text-sm">
+                            <p>• Practice with <a href="https://cryptopals.com/" target="_blank" class="text-cyan-400 underline">Cryptopals</a></p>
+                            <p>• Try <a href="https://cryptohack.org/" target="_blank" class="text-cyan-400 underline">CryptoHack</a> challenges</p>
+                            <p>• Learn about RSA, AES, and hashing</p>
+                            <p>• Study classical ciphers (Vigenère, etc.)</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const correctFlags = {
+            1: 'flag{base64_double_trouble}',
+            2: 'flag{ancient_cipher_digital_age}',
+            3: 'flag{three_layers_deep}',
+            4: 'flag{xor_is_its_own_inverse}',
+            5: 'flag{done_333337ent}'
+        };
+
+        function checkFlag(num) {
+            const userInput = document.getElementById('flag' + num).value.trim();
+            const resultPara = document.getElementById('result' + num);
+            
+            if (userInput === correctFlags[num]) {
+                resultPara.textContent = 'Correct! Well done, agent! 🎉';
+                resultPara.className = 'mt-2 font-bold h-6 text-green-400';
+            } else {
+                resultPara.textContent = 'Not quite right. Keep analyzing! 🔍';
+                resultPara.className = 'mt-2 font-bold h-6 text-red-400';
+            }
+        }
+
+        // Setup hint buttons
+        for (let i = 1; i <= 5; i++) {
+            const btn = document.getElementById('hint' + i + 'Btn');
+            const hint = document.getElementById('hint' + i);
+            if (btn && hint) {
+                btn.onclick = function() {
+                    if (hint.style.display === 'none') {
+                        hint.style.display = 'block';
+                        btn.textContent = 'Hide Hint';
+                    } else {
+                        hint.style.display = 'none';
+                        btn.textContent = 'Show Hint';
+                    }
+                };
+            }
+        }
+    </script>
+</body>
+</html>
