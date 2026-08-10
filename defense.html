@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="An introduction to blue-team security, monitoring, detection, and incident response.">
+  <link rel="icon" href="assets/stuycybersecuritylogo.png"><link rel="stylesheet" href="assets/site.css"><title>Defense and Incident Response · Stuy Cybersecurity</title>
+</head><body>
+  <a class="skip" href="#content">Skip to content</a><header class="site-header"><div class="header-inner"><a class="brand" href="index.html"><img src="assets/stuycybersecuritylogo.png" alt=""><span>Stuy Cybersecurity</span></a><nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a href="guides.html" aria-current="page">Guides</a><a href="CTFGuide.html">CTF guide</a><a href="certifications.html">Certifications</a><a href="careers.html">Careers</a><a href="history.html">History</a></nav></div></header>
+  <main class="page narrow" id="content">
+    <p class="kicker">Blue team</p><h1>Defense and incident response</h1>
+    <p class="lede">Defensive security is the work of reducing risk, noticing when something goes wrong, understanding what happened, limiting damage, and improving the system afterward.</p>
+
+    <section class="section"><h2>Prevention is only one part</h2>
+      <p>No organization prevents every mistake or attack. Good defense uses several layers: secure design, strong identity controls, careful configuration, updates, backups, monitoring, trained people, and a practiced response plan.</p>
+      <p>A control should have a clear purpose. A firewall can limit network paths. MFA can reduce account takeover. Application allowlisting can restrict execution. Logging can preserve evidence. Backups can support recovery. One product rarely solves several unrelated problems equally well.</p>
+    </section>
+
+    <section class="section"><h2>Know what you are protecting</h2>
+      <p>Asset inventory comes before monitoring. List important devices, accounts, services, applications, data, owners, dependencies, and normal business use. If a system appears in a log but nobody knows what it is, response will be slow and uncertain.</p>
+      <p>Classify what would happen if confidentiality, integrity, or availability were lost. A public club website and a database of student records do not have the same consequences or access requirements.</p>
+    </section>
+
+    <section class="section"><h2>Logs and telemetry</h2>
+      <table><thead><tr><th>Source</th><th>What it can show</th><th>Limitations</th></tr></thead><tbody>
+        <tr><td>Identity provider</td><td>Logins, MFA, tokens, device and location context</td><td>A successful login does not prove the user intended it.</td></tr>
+        <tr><td>Endpoint</td><td>Processes, files, users, services, command lines</td><td>Coverage and collection settings vary.</td></tr>
+        <tr><td>DNS</td><td>Names requested by clients</td><td>Does not necessarily show the later connection or content.</td></tr>
+        <tr><td>Firewall and proxy</td><td>Connections, destinations, decisions, volume</td><td>Encrypted content may not be visible.</td></tr>
+        <tr><td>Application</td><td>Users, objects, errors, business actions</td><td>Developers must log useful context without exposing secrets.</td></tr>
+        <tr><td>Cloud control plane</td><td>Administrative and API changes</td><td>Events need identity and resource context.</td></tr>
+      </tbody></table>
+      <p>Useful logs include reliable timestamps, event types, actor and target identifiers, outcome, source system, and a request or correlation ID. Avoid storing passwords, session tokens, or unnecessary personal data.</p>
+    </section>
+
+    <section class="section"><h2>From a question to a detection</h2>
+      <p>A detection should describe behavior that matters. “Malware happened” is not testable. “A document process started a command shell that connected to a new external destination” is closer to observable behavior.</p>
+      <ol class="steps"><li>State the threat behavior and why it matters.</li><li>Identify the required data sources and fields.</li><li>Write a query against known test data.</li><li>Measure expected benign matches and add justified context.</li><li>Create alert output that gives an analyst enough evidence to begin.</li><li>Test with a safe simulation and maintain the rule as systems change.</li></ol>
+      <div class="aside"><strong>Detection goes beyond matching known strings</strong><p>An IP address or file hash can be useful, but it may stop being useful quickly. Detections based on behavior, identity context, sequence, rarity, and asset importance usually remain relevant longer.</p></div>
+    </section>
+
+    <section class="section"><h2>Alert triage</h2>
+      <p>Triage asks whether an alert represents expected activity, a policy issue, a failed attempt, or an incident requiring action. Begin with the alert logic and raw evidence. Confirm the user, device, time, process tree, network activity, and affected resource. Compare with normal behavior and related alerts.</p>
+      <p>Do not label something a false positive merely because it was benign. If the rule accurately detected the behavior but the behavior is allowed, the rule may need better context or the environment may need a documented exception.</p>
+    </section>
+
+    <section class="section"><h2>Incident response</h2>
+      <table><thead><tr><th>Phase</th><th>Main work</th><th>Questions</th></tr></thead><tbody>
+        <tr><td>Preparation</td><td>Roles, access, tools, contacts, logging, backups, exercises</td><td>Can the team act safely and quickly?</td></tr>
+        <tr><td>Identification</td><td>Validate evidence, scope affected assets and accounts</td><td>What happened, when, and with what confidence?</td></tr>
+        <tr><td>Containment</td><td>Limit ongoing harm while preserving essential operations</td><td>What action reduces risk without destroying evidence?</td></tr>
+        <tr><td>Eradication</td><td>Remove persistence, close the initial weakness, reset trust</td><td>What caused the incident and what remains compromised?</td></tr>
+        <tr><td>Recovery</td><td>Restore service, monitor closely, validate normal operation</td><td>When is it safe to return and how will recurrence be noticed?</td></tr>
+        <tr><td>Lessons learned</td><td>Update systems, detections, process, training, and documentation</td><td>Which change would most reduce future risk?</td></tr>
+      </tbody></table>
+      <p>Real phases overlap. A team may contain one account while still investigating other systems. Keep a timeline of decisions, evidence, and actions. Know who has authority to isolate a device, disable an account, communicate externally, or involve legal and law enforcement.</p>
+    </section>
+
+    <section class="section"><h2>Threat intelligence</h2>
+      <p>Threat intelligence supports a decision. It may describe an adversary, campaign, vulnerability, technique, target, or indicator. Useful intelligence states its source, date, confidence, relevance, and expected action.</p>
+      <p>Do not paste every public indicator into blocking systems. Indicators can be stale, shared by legitimate services, or intentionally misleading. Validate them against internal evidence and the organization's risk.</p>
+    </section>
+
+    <section class="section"><h2>A safe club lab</h2>
+      <ol class="steps"><li>Create a local virtual machine and enable process, login, and network logging.</li><li>Perform normal actions such as opening an editor, using a browser, and running a script.</li><li>Run a harmless simulation such as repeated failed logins against a local test account.</li><li>Write a query that distinguishes the simulation from ordinary events.</li><li>Create an alert containing time, account, host, count, and source.</li><li>Write a short incident note and propose one preventive control.</li></ol>
+    </section>
+
+    <section class="sources"><h2>Further reading</h2><ul><li><a href="https://www.nist.gov/cyberframework">NIST Cybersecurity Framework</a></li><li><a href="https://attack.mitre.org/">MITRE ATT&amp;CK</a></li><li><a href="https://www.cisa.gov/topics/cyber-threats-and-advisories">CISA threats and advisories</a></li></ul></section>
+  </main><footer class="site-footer"><div class="footer-inner"><p>Stuyvesant Cybersecurity Club</p><p><a href="index.html">All guides</a></p></div></footer><script src="assets/site.js"></script>
+</body></html>

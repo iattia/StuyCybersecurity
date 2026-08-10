@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Practical cybersecurity habits for accounts, devices, phishing, backups, and recovery.">
+  <link rel="icon" href="assets/stuycybersecuritylogo.png"><link rel="stylesheet" href="assets/site.css"><title>Security Hygiene · Stuy Cybersecurity</title>
+</head><body>
+  <a class="skip" href="#content">Skip to content</a>
+  <header class="site-header"><div class="header-inner"><a class="brand" href="index.html"><img src="assets/stuycybersecuritylogo.png" alt=""><span>Stuy Cybersecurity</span></a><nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a href="guides.html" aria-current="page">Guides</a><a href="CTFGuide.html">CTF guide</a><a href="certifications.html">Certifications</a><a href="careers.html">Careers</a><a href="history.html">History</a></nav></div></header>
+  <main class="page narrow" id="content">
+    <p class="kicker">Everyday security</p><h1>Basic cybersecurity practices</h1>
+    <p class="lede">You do not need to become suspicious of everything. A few consistent habits prevent common account takeovers, reduce the damage of lost devices, and make recovery much easier.</p>
+    <p class="updated">Reviewed August 2026. Product settings change, so confirm the current instructions for each service.</p>
+
+    <section class="section"><h2>Protect the accounts that can reset everything else</h2>
+      <p>Your primary email account, phone-provider account, password manager, financial accounts, and school or work identity deserve the strongest protection. Email is especially important because many password-reset links go there.</p>
+      <ol class="steps"><li>Use a unique password or passkey.</li><li>Turn on the strongest multifactor method the service supports.</li><li>Save recovery codes somewhere separate and secure.</li><li>Review recovery email addresses, phone numbers, signed-in devices, and active sessions.</li><li>Remove old application access and accounts you no longer use.</li></ol>
+    </section>
+
+    <section class="section"><h2>Passwords, passkeys, and password managers</h2>
+      <p>Reusing one password lets a breach at one site endanger other accounts. A password manager can generate and store long, unique passwords so you do not have to invent variations. Protect the manager itself with a strong master passphrase and multifactor authentication.</p>
+      <p>Passkeys use public-key cryptography and are designed to resist ordinary phishing because the credential is bound to the site. They are a strong option when available. Keep recovery methods secure; a strong login method can still be undermined by a weak reset process.</p>
+      <div class="aside"><strong>A practical first step</strong><p>Start with your email account. Change any reused password, enable a password manager, turn on MFA or a passkey, and save recovery codes. Then work through other important accounts over several days.</p></div>
+    </section>
+
+    <section class="section"><h2>Multifactor authentication</h2>
+      <p>MFA asks for more than one kind of proof. A password plus a security key is stronger than a password alone. Methods differ: hardware security keys and properly implemented passkeys are phishing-resistant; authenticator codes and number-matching prompts are useful; text-message codes are better than no MFA but can be affected by phone-account attacks and phishing.</p>
+      <p>Never approve a login prompt you did not initiate. An unexpected stream of prompts may be an attempt to wear you down. Change the password, review sessions, and report the activity.</p>
+    </section>
+
+    <section class="section"><h2>Updates and software</h2>
+      <p>Enable automatic updates for the operating system, browser, phone, and frequently used applications. Restart when an update requires it. Remove extensions and applications you no longer use. Download software from the vendor or trusted platform rather than advertisements and third-party mirrors.</p>
+      <p>Updates do not make a device invulnerable, but they close known flaws and reduce the amount of old software you must monitor.</p>
+    </section>
+
+    <section class="section"><h2>Phishing and suspicious messages</h2>
+      <p>Phishing messages create urgency, fear, curiosity, or authority. They may ask you to sign in, open a document, approve an MFA request, send money, or move a conversation to another channel.</p>
+      <ul><li>Pause when a message pressures you to act immediately.</li><li>Check the actual sender and destination instead of relying on the display text.</li><li>Open the known site or app directly instead of using an unexpected login link.</li><li>Confirm unusual requests through a separate channel you already trust.</li><li>Do not run files or enable macros simply because a document asks.</li><li>Report suspicious school or work messages through the designated process.</li></ul>
+      <p>A message may come from a real account that has been compromised. Judge the request, the context, and the sender together.</p>
+    </section>
+
+    <section class="section"><h2>Devices</h2>
+      <ul><li>Use a screen lock and a strong device passcode.</li><li>Enable full-disk encryption and device-finding features where appropriate.</li><li>Keep important data out of unencrypted removable drives.</li><li>Use a non-administrator account for ordinary work when practical.</li><li>Back up important files before a device fails or is lost.</li><li>Do not leave unlocked devices unattended in public.</li></ul>
+      <p>Before selling, donating, or recycling a device, follow the manufacturer's secure reset guidance and remove it from your account.</p>
+    </section>
+
+    <section class="section"><h2>Backups</h2>
+      <p>A backup protects against hardware failure, accidental deletion, theft, and some ransomware scenarios. Keep more than one copy, use more than one kind of storage, and keep at least one copy separate from the device. A synchronized folder is useful, but synchronization can also copy deletions or unwanted encryption. Version history and offline copies provide additional protection.</p>
+      <p>Test recovery. A backup you have never restored is an assumption.</p>
+    </section>
+
+    <section class="section"><h2>Browsers, extensions, and privacy</h2>
+      <p>Keep the browser current. Remove extensions you do not need and review the permissions of those you keep. An extension that can read and change data on every site has significant access. Use separate browser profiles for school, personal, or lab activity when that separation helps.</p>
+      <p>Privacy and security overlap but are not identical. A service may be secure against outsiders while collecting more data than you want. Review permissions, location sharing, public profile settings, connected applications, and old posts.</p>
+    </section>
+
+    <section class="section"><h2>Home networks and public Wi-Fi</h2>
+      <p>Change default router administration credentials, install router updates, use modern Wi-Fi security, and disable remote administration unless you understand and need it. Put untrusted smart devices on a guest or separate network if the router supports that feature.</p>
+      <p>HTTPS protects the content of normal web connections on public Wi-Fi, but the network can still observe some metadata and attempt to redirect or deceive you. Verify network names, avoid unexpected certificate warnings, and use a trusted VPN when your school or organization requires one.</p>
+    </section>
+
+    <section class="section"><h2>If an account may be compromised</h2>
+      <ol class="steps"><li>Use a trusted device and go directly to the service.</li><li>Change the password and secure the email account connected to recovery.</li><li>Sign out other sessions and remove unknown devices, tokens, forwarding rules, and connected applications.</li><li>Turn on or reset MFA and save new recovery codes.</li><li>Check what data or messages the intruder could access and notify affected people or institutions.</li><li>Preserve suspicious messages and timestamps before deleting them.</li><li>Contact the service, school, bank, or phone provider through official channels when needed.</li></ol>
+    </section>
+
+    <section class="sources"><h2>Sources</h2><ul>
+      <li><a href="https://www.cisa.gov/secure-our-world">CISA Secure Our World</a>: passwords, MFA, phishing, and updates.</li>
+      <li><a href="https://www.cisa.gov/audiences/small-and-medium-businesses/secure-your-business/require-multifactor-authentication">CISA guidance on MFA methods</a>.</li>
+      <li><a href="https://pages.nist.gov/800-63-4/sp800-63b.html">NIST SP 800-63B</a>: current authentication guidance.</li>
+    </ul></section>
+  </main>
+  <footer class="site-footer"><div class="footer-inner"><p>Stuyvesant Cybersecurity Club</p><p><a href="index.html">All guides</a></p></div></footer><script src="assets/site.js"></script>
+</body></html>

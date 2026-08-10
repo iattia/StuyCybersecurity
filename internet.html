@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A friendly introduction to how the internet works and why it matters for cybersecurity.">
+  <link rel="icon" href="assets/stuycybersecuritylogo.png"><link rel="stylesheet" href="assets/site.css"><title>How the Internet Works · Stuy Cybersecurity</title>
+</head><body>
+  <a class="skip" href="#content">Skip to content</a>
+  <header class="site-header"><div class="header-inner"><a class="brand" href="index.html"><img src="assets/stuycybersecuritylogo.png" alt=""><span>Stuy Cybersecurity</span></a><nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a href="guides.html" aria-current="page">Guides</a><a href="CTFGuide.html">CTF guide</a><a href="certifications.html">Certifications</a><a href="careers.html">Careers</a><a href="history.html">History</a></nav></div></header>
+  <main class="page narrow" id="content">
+    <p class="kicker">Foundations</p><h1>How the internet works</h1>
+    <p class="lede">The internet is a network of networks. Security makes more sense once you know what is moving, which devices make decisions, and where the system expects trust.</p>
+
+    <section class="section"><h2>Start with one ordinary action</h2>
+      <p>You type a website address into a browser. The browser needs to find the server, establish a connection, protect the connection if HTTPS is used, send an HTTP request, receive a response, and load additional files. Each step depends on a different protocol and can fail or be attacked in a different way.</p>
+      <p>A protocol is an agreement about message format and behavior. Protocols let equipment and software made by different organizations communicate. They also create assumptions. Security work often begins by asking whether those assumptions still hold when a participant is dishonest, compromised, or simply mistaken.</p>
+    </section>
+
+    <section class="section"><h2>Layers are a way to divide the problem</h2>
+      <table><thead><tr><th>Layer</th><th>Job</th><th>Examples</th><th>Security questions</th></tr></thead><tbody>
+        <tr><td>Link</td><td>Move frames across one local connection.</td><td>Ethernet, Wi-Fi, ARP</td><td>Who is on the local network? Can frames or addresses be spoofed?</td></tr>
+        <tr><td>Internet</td><td>Move packets between networks.</td><td>IPv4, IPv6, ICMP</td><td>Which routes and addresses are trusted? Can traffic be filtered or redirected?</td></tr>
+        <tr><td>Transport</td><td>Connect application endpoints.</td><td>TCP, UDP, QUIC</td><td>Which ports are exposed? Is state tracked correctly? Can traffic be disrupted?</td></tr>
+        <tr><td>Application</td><td>Give messages meaning for users and services.</td><td>DNS, HTTP, SMTP, SSH</td><td>Who is authenticated? Is access checked? Is data parsed safely?</td></tr>
+      </tbody></table>
+      <p>The layers are not physical boxes and real systems do not always fit perfectly. They are a useful way to decide which part of the communication you are examining.</p>
+    </section>
+
+    <section class="section"><h2>Local networks</h2>
+      <p>Your laptop normally reaches a nearby switch or wireless access point. On an Ethernet-like network, interfaces have link-layer addresses. ARP helps an IPv4 host learn which local hardware address corresponds to a nearby IP address. A device called a router connects this local network to other networks.</p>
+      <p>Most home networks use private IP addresses internally and network address translation at the router. NAT changes address and port information as connections cross the boundary. It is not a complete firewall or identity system, although its state can limit unsolicited inbound connections.</p>
+      <h3>DHCP</h3><p>The Dynamic Host Configuration Protocol commonly supplies a device with an IP address, network prefix, default gateway, DNS servers, and lease time. If this configuration is wrong or malicious, traffic can be sent to the wrong place.</p>
+      <h3>Wireless networks</h3><p>Wi-Fi adds radio communication, association, and wireless encryption. A password protects access to the network, while modern enterprise networks may authenticate individual users or devices. The security of the application still matters even when Wi-Fi encryption is strong.</p>
+    </section>
+
+    <section class="section"><h2>IP addresses and routing</h2>
+      <p>An IP address identifies an interface within an addressing system. A network prefix groups addresses. A host compares the destination with its local routes; if the destination is not local, the packet usually goes to a default gateway.</p>
+      <p>Routers examine destination addresses and select next hops. Across the public internet, independent networks exchange reachability information using the Border Gateway Protocol. Routing answers where traffic should go. It does not automatically guarantee that the destination is honest or that the path is private.</p>
+      <div class="aside"><strong>Useful distinction</strong><p>An IP address identifies where traffic is delivered at the network layer. A domain name is a human-manageable name. A port identifies a transport endpoint. A URL describes an application resource. They are related but not interchangeable.</p></div>
+    </section>
+
+    <section class="section"><h2>DNS: names to records</h2>
+      <p>DNS is a distributed database. A resolver asks authoritative name servers for records and caches answers for a limited time. Common records include <code>A</code> for IPv4, <code>AAAA</code> for IPv6, <code>CNAME</code> for aliases, <code>MX</code> for mail routing, and <code>TXT</code> for text used by many verification systems.</p>
+      <p>DNS security questions include who controls a domain, whether an answer was forged, whether a resolver or cache was poisoned, and whether sensitive names are exposed. DNSSEC can authenticate signed DNS data, while encrypted DNS transports protect queries on part of their path. Neither one proves that the website itself is safe.</p>
+      <pre><code>dig example.com A
+dig example.com AAAA
+dig example.com MX
+dig example.com TXT</code></pre>
+    </section>
+
+    <section class="section"><h2>TCP, UDP, and QUIC</h2>
+      <p>TCP creates an ordered byte stream. It establishes state, numbers bytes, acknowledges received data, retransmits missing segments, and controls sending speed. Applications still need their own message boundaries because TCP delivers bytes rather than application records.</p>
+      <p>UDP sends datagrams without TCP's delivery and ordering behavior. It is useful when an application wants low overhead or implements its own reliability. QUIC runs over UDP and provides secure, multiplexed connections; HTTP/3 uses it. Choosing UDP does not mean choosing insecurity, and choosing TCP does not make application messages trustworthy.</p>
+    </section>
+
+    <section class="section"><h2>HTTP and the web</h2>
+      <p>The web is one application built on the internet. A browser sends an HTTP method, path, headers, and sometimes a body. The server returns a status, headers, and body. HTML describes document structure, CSS controls presentation, and JavaScript runs application logic in the browser.</p>
+      <p>Cookies let a browser store values associated with a site. A session cookie often points to server-side login state. Since a browser user can inspect and change client-side data, permissions must be enforced by the server.</p>
+      <pre><code>GET /account HTTP/1.1
+Host: example.com
+Cookie: session=opaque-value
+Accept: text/html</code></pre>
+    </section>
+
+    <section class="section"><h2>TLS and HTTPS</h2>
+      <p>TLS protects data in transit and lets a client authenticate a server through certificates and trusted certificate authorities. The client and server agree on cryptographic parameters, establish keys, and then protect application records.</p>
+      <p>HTTPS means HTTP over TLS. It helps prevent someone on the path from reading or silently altering requests. It does not guarantee that a site is honest, free of vulnerabilities, or authorized to access a particular record.</p>
+    </section>
+
+    <section class="section"><h2>Cloud services are still computers and networks</h2>
+      <p>Cloud providers offer virtual machines, containers, databases, storage, identity systems, queues, and serverless functions through managed interfaces. The physical infrastructure is abstracted, but the same questions remain: who can access a resource, which network paths exist, where secrets are stored, how data is backed up, and who is responsible for updates.</p>
+      <p>A content delivery network places caches or proxy servers near users. A load balancer distributes traffic among servers. These layers improve performance and availability but can create security problems if they parse requests or cache responses differently from the application.</p>
+    </section>
+
+    <section class="section"><h2>Where cybersecurity fits</h2>
+      <ul><li>Endpoint security protects devices that create and consume traffic.</li><li>Network security controls and observes connections between systems.</li><li>Application security makes requests, parsers, sessions, and business rules safer.</li><li>Identity security controls accounts, credentials, roles, and service access.</li><li>Cryptography protects data and authenticates participants when used correctly.</li><li>Monitoring and response help an organization notice and recover when preventive controls fail.</li></ul>
+      <div class="aside"><strong>Try this</strong><p>Open your browser's network panel and load a simple page. Identify the DNS name, remote address, protocol, request method, response status, content type, cookies, and the additional files loaded by the page. Explain which details belong to DNS, transport, TLS, and HTTP.</p></div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="footer-inner"><p>Stuyvesant Cybersecurity Club</p><p><a href="index.html">All guides</a></p></div></footer><script src="assets/site.js"></script>
+</body></html>
